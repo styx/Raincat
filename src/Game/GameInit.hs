@@ -1,7 +1,7 @@
 module Game.GameInit
     (gameInit) where
 
-import Maybe
+import Data.Maybe
 import Data.IORef
 import World.World
 import qualified Nxt.Graphics
@@ -32,7 +32,7 @@ gameInit = do
     initAudio
     m <- loadMusic (dataPath ++ "data/music/project_raincat.mp3")
     playMusic m
-    
+
     lvl <- openLevel (dataPath ++ "data/levels/pinball/pinball.lvl")
     let lvlData = levelData lvl
         lvlRect = levelRects lvlData
@@ -138,3 +138,4 @@ initItemPanel = do
     goStopBtn <- initGoStopButton
 
     return (ItemPanel itemButtons goStopBtn)
+

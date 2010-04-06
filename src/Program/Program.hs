@@ -1,4 +1,4 @@
-﻿module Program.Program
+module Program.Program
     (programMain,
      programDraw) where
 
@@ -34,3 +34,4 @@ programDraw worldStateRef = do
          MainMenuState      -> menuDraw worldStateRef
          HowtoMenuState     -> howtoDraw worldStateRef
          PostVictoryState   -> postVictoryDraw worldStateRef
+

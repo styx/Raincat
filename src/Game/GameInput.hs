@@ -1,4 +1,4 @@
-﻿module Game.GameInput
+module Game.GameInput
     (gameInput,
      gameMotion) where
 
@@ -103,3 +103,4 @@ keyboardAct keysStateRef (MouseButton RightButton) Up = do
     writeIORef keysStateRef (keysState {rMouseDown = False})
 
 keyboardAct _ _ _ = return ()
+

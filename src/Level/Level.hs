@@ -1,5 +1,5 @@
 module Level.Level
-	(Level(Level),
+    (Level(Level),
      LevelData(LevelData),
      levelData,
      levelWidth,
@@ -16,30 +16,30 @@ module Level.Level
      openLevel) where
 
 import Nxt.Types
-import IO
+import System.IO
 import Control.Exception
 import Settings.DisplaySettings
 import Nxt.Types
 import Nxt.Graphics
 
 data LevelData = LevelData
-	{
-		levelEnd	        :: Rect,
-		levelCat	        :: Rect,
+        {
+        levelEnd            :: Rect,
+        levelCat            :: Rect,
         levelFireHydrantsL  :: [Rect],
         levelFireHydrantsR  :: [Rect],
         levelPuddles        :: [Rect],
-		levelRects          :: [Rect],
-		levelPolys          :: [Poly],
+        levelRects          :: [Rect],
+        levelPolys          :: [Poly],
         levelBackgrounds    :: [(Vector2d, Nxt.Types.Texture)]
-	}
+        }
 data Level = Level
-	{
-		levelWidth	    :: Int,
-		levelHeight	    :: Int,
+        {
+        levelWidth      :: Int,
+        levelHeight     :: Int,
         levelItemCounts :: [Int],
-		levelData	    :: LevelData
-	}
+        levelData       :: LevelData
+        }
 
 -- readInt
 readInt' :: [Char] -> Int
@@ -52,10 +52,10 @@ readDouble' s = read s
 -- openLevel
 openLevel :: [Char] -> IO(Level)
 openLevel file = do
-			inh <- openFile file ReadMode
-			level <- parseLevel inh
-			hClose inh
-			return (level) 
+    inh <- openFile file ReadMode
+    level <- parseLevel inh
+    hClose inh
+    return (level)
 
 -- parseLevel
 parseLevel :: Handle -> IO(Level)
@@ -79,36 +79,36 @@ parseLevel inh = do
 -- transform coordinates from using top left as (0,0) to bottom left as (0,0)
 transformCoord :: LevelData -> LevelData
 transformCoord (LevelData end cat fireHydrantsL fireHydrantsR puddles rects polys bgTex) =
-	LevelData (transformR end) (transformR cat) (map transformR fireHydrantsL) (map transformR fireHydrantsR) (map transformR puddles) (map transformR rects) (map transformP polys) bgTex
-	where transformR (Rect rx ry rw rh) = let sh' = fromGLdouble screenResHeight
-                                              in Rect rx (sh' - ry) rw (-rh)  
-	      transformP (Poly polyS polyVs) = let sh' = fromGLdouble screenResHeight
-                                               in Poly polyS (map (\(vertx, verty) -> (vertx, sh' - verty)) polyVs) 
+    LevelData (transformR end) (transformR cat) (map transformR fireHydrantsL) (map transformR fireHydrantsR) (map transformR puddles) (map transformR rects) (map transformP polys) bgTex
+    where transformR (Rect rx ry rw rh) = let sh' = fromGLdouble screenResHeight
+                                          in Rect rx (sh' - ry) rw (-rh)
+          transformP (Poly polyS polyVs) = let sh' = fromGLdouble screenResHeight
+                                           in Poly polyS (map (\(vertx, verty) -> (vertx, sh' - verty)) polyVs)
 
 -- parseShape
 
 parseShape :: Int -> Handle -> LevelData -> IO(LevelData)
 parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrantsR puddles rects polys _)) = do
-	ineof <- hIsEOF inh
-	if ineof || numShapes <= 0
-		then return leveldata
-		else
-			do
-				coordS <- hGetLine inh
-				let toks = words coordS
-				let coord = map readDouble' (tail $ words coordS)
-				let verts = parseVerts coord
-				let poly = Poly (length verts) verts
-				let id = head toks
-				let newLevelData = case id of
-                                     "rectangle"       -> leveldata {levelRects = ((parseRect coord):rects)}
-                                     "cat"              -> leveldata {levelCat = (parseRect coord)}
-                                     "end"              -> leveldata {levelEnd = (parseRect coord)}
-                                     "firehydrantLeft"  -> leveldata {levelFireHydrantsL = ((parseRect coord):fireHydrantsL)}
-                                     "firehydrantRight" -> leveldata {levelFireHydrantsR = ((parseRect coord):fireHydrantsR)}
-                                     "puddle"           -> leveldata {levelPuddles = ((parseRect coord):puddles)}
-                                     "polygon"          -> leveldata {levelPolys = (poly:polys)}
-				parseShape (numShapes-1) inh newLevelData
+    ineof <- hIsEOF inh
+    if (ineof || numShapes <= 0)
+      then return leveldata
+      else
+        do
+            coordS <- hGetLine inh
+            let toks = words coordS
+            let coord = map readDouble' (tail $ words coordS)
+            let verts = parseVerts coord
+            let poly = Poly (length verts) verts
+            let id = head toks
+            let newLevelData = case id of
+                                 "rectangle"       -> leveldata {levelRects = ((parseRect coord):rects)}
+                                 "cat"              -> leveldata {levelCat = (parseRect coord)}
+                                 "end"              -> leveldata {levelEnd = (parseRect coord)}
+                                 "firehydrantLeft"  -> leveldata {levelFireHydrantsL = ((parseRect coord):fireHydrantsL)}
+                                 "firehydrantRight" -> leveldata {levelFireHydrantsR = ((parseRect coord):fireHydrantsR)}
+                                 "puddle"           -> leveldata {levelPuddles = ((parseRect coord):puddles)}
+                                 "polygon"          -> leveldata {levelPolys = (poly:polys)}
+            parseShape (numShapes-1) inh newLevelData
 
 -- parseVerts
 parseVerts :: [Double] -> [Vector2d]
@@ -118,11 +118,12 @@ parseVerts (x:y:vs) = (x,y):parseVerts vs
 
 -- parseRect
 parseRect :: [Double] -> Rect
-parseRect coords = if ((length coords) /= 8)
-			then
-				throw (PatternMatchFail "Incorrect number of Coords")
-		   else Rect bottomLX bottomLY width height
-		  	 where bottomLX = head coords
-			       bottomLY = coords !! 1
-			       width = (coords !! 2) - bottomLX
-			       height = (coords !! 7) - bottomLY
+parseRect coords =
+    if ((length coords) /= 8)
+    then throw (PatternMatchFail "Incorrect number of Coords")
+    else Rect bottomLX bottomLY width height
+        where bottomLX = head coords
+              bottomLY = coords !! 1
+              width = (coords !! 2) - bottomLX
+              height = (coords !! 7) - bottomLY
+

@@ -23,3 +23,4 @@ playMusic :: Music -> IO ()
 playMusic m = do
     SDL.Mixer.Music.setMusicVolume 50
     SDL.Mixer.Music.playMusic m (-1)
+

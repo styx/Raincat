@@ -9,4 +9,5 @@ data InputState = InputState
         left    :: Bool,
         down    :: Bool,
         right   :: Bool
-     }   
+     }
+

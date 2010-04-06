@@ -1,4 +1,4 @@
-﻿module UI.ItemPanel
+module UI.ItemPanel
     (ItemPanel(ItemPanel),
      itemButtonList) where
 
@@ -8,3 +8,4 @@ data ItemPanel = ItemPanel
     {
         itemButtonlist :: [ItemButton]
     }
+

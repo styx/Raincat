@@ -3,3 +3,4 @@ module Settings.Path
 
 dataPath :: [Char]
 dataPath = "./"
+

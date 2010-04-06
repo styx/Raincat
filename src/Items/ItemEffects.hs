@@ -1,11 +1,11 @@
 module Items.ItemEffects
-	(noEffect,
+    (noEffect,
      hurtEffect,
      winEffect,
      walkEffect,
-	 springBootsEffect,
+     springBootsEffect,
      hairDryerEffect,
-	 speedBootsEffect,
+     speedBootsEffect,
      rainBootsEffect,
      ponchoEffect,
      shieldEffect,
@@ -18,7 +18,7 @@ module Items.ItemEffects
      pogostickEffect2,
      wrenchEffect) where
 
-import Maybe
+import Data.Maybe
 import Graphics.Rendering.OpenGL as GL
 import Nxt.Graphics
 import Nxt.Types
@@ -63,8 +63,8 @@ springBootsEffect cat =
 -- Hair Dryer
 hairDryerEffect :: Cat -> Cat
 hairDryerEffect cat =
-	let (velX, velY) = (catVelocity cat)
-        in updateCatVel cat (-velX, velY)
+    let (velX, velY) = (catVelocity cat)
+    in updateCatVel cat (-velX, velY)
 
 -- Speed Boots
 speedBootsEffect :: Cat -> Cat
@@ -74,8 +74,8 @@ speedBootsEffect cat =
                   DirRight -> CatSettings.catSpeedVelX
                   DirLeft -> (-CatSettings.catSpeedVelX),
                snd $ catVelocity cat)
-	    in updateCatVel (cat {catTexture = speedBootsTex, catItemName = "SpeedBoots",
-                              catItemDuration = Just CatSettings.catSpeedDuration}) vel
+    in updateCatVel (cat {catTexture = speedBootsTex, catItemName = "SpeedBoots",
+                          catItemDuration = Just CatSettings.catSpeedDuration}) vel
 
 -- Rain Boots
 rainBootsEffect :: Cat -> Cat
@@ -88,22 +88,22 @@ rainBootsEffect cat =
 ponchoEffect :: Cat -> Cat
 ponchoEffect cat =
     let ponchoTex = ponchoTextures $ catAnimations cat
-	    in cat {catTexture = ponchoTex, catItemName = "Poncho",
-                catItemDuration = Just CatSettings.catPonchoDuration}
+    in cat {catTexture = ponchoTex, catItemName = "Poncho",
+            catItemDuration = Just CatSettings.catPonchoDuration}
 
 -- Shield
 shieldEffect :: Cat -> Cat
 shieldEffect cat =
     let shieldTex = shieldTextures $ catAnimations cat
-	    in cat {catTexture = shieldTex, catItemName = "Shield",
-                catItemDuration = Just CatSettings.catShieldDuration}
+    in cat {catTexture = shieldTex, catItemName = "Shield",
+            catItemDuration = Just CatSettings.catShieldDuration}
 
 -- Umbrella
 umbrellaEffect :: Cat -> Cat
 umbrellaEffect cat =
     let umbrellaTex = umbrellaTextures $ catAnimations cat
-	    in cat {catTexture = umbrellaTex, catItemName = "Umbrella",
-                catItemDuration = Just CatSettings.catUmbrellaDuration}
+    in cat {catTexture = umbrellaTex, catItemName = "Umbrella",
+            catItemDuration = Just CatSettings.catUmbrellaDuration}
 
 fallUmbrellaEffect :: Cat -> Cat
 fallUmbrellaEffect cat =
@@ -112,8 +112,8 @@ fallUmbrellaEffect cat =
         itemDur = if isNothing (catItemDuration cat)
                      then Just CatSettings.catUmbrellaDuration
                      else catItemDuration cat
-	    in cat {catTexture = fallUmbrellaTex, catItemName = "FallUmbrella",
-                catItemDuration = itemDur, catVelocity = catVel}
+    in cat {catTexture = fallUmbrellaTex, catItemName = "FallUmbrella",
+            catItemDuration = itemDur, catVelocity = catVel}
 
 -- Upsidedown Umbrella
 upsUmbrellaEffect :: Cat -> Cat
@@ -135,8 +135,8 @@ skateboardEffect cat =
                     DirRight -> CatSettings.catSkateVelX
                     DirLeft -> (-CatSettings.catSkateVelX),
                snd (catVelocity cat))
-	    in updateCatVel (cat {catTexture = skateboardTex, catItemName = "Skateboard",
-                              catItemDuration = Just CatSettings.catSkateDuration}) vel
+    in updateCatVel (cat {catTexture = skateboardTex, catItemName = "Skateboard",
+                          catItemDuration = Just CatSettings.catSkateDuration}) vel
 
 -- Pogostick
 pogostickEffect :: Cat -> Cat
@@ -146,9 +146,10 @@ pogostickEffect cat =
 pogostickEffect2 :: Cat -> Cat
 pogostickEffect2 cat =
     let pogostickTex = pogostickTextures $ catAnimations cat
-        in cat {catTexture = pogostickTex, catItemDuration = Nothing}
+    in cat {catTexture = pogostickTex, catItemDuration = Nothing}
 
 -- Wrench
 wrenchEffect :: Cat -> Cat
 wrenchEffect cat =
     cat {catItemName = "Wrench", catItemDuration = Nothing}
+

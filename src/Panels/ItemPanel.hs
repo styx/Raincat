@@ -71,3 +71,4 @@ data ItemPanel = ItemPanel
         itemButtonList  :: [ItemButton],
         goStopButton    :: GoStopButton
     }
+

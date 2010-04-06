@@ -149,3 +149,4 @@ drawDebug worldState = do
     let mousex = mouseX mousePos
     let mousey = mouseY mousePos
     Nxt.Graphics.drawString 10.0 740.0 ("Mouse Pos: (" ++ (show mousex) ++ ", " ++ (show mousey) ++ ")") (Color4 0.7 0.7 0.7 1.0)
+

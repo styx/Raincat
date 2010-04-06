@@ -1,8 +1,8 @@
 module Game.GameMain
     (gameMain) where
 
-import List
-import Maybe
+import Data.List
+import Data.Maybe
 import Control.Monad.State
 import Data.IORef
 import qualified Graphics.UI.GLUT as Glut
@@ -66,7 +66,7 @@ gameMain worldStateRef mainCallback = do
 
     -- update rain
     rain' <- updateRain worldState
-                         
+
     -- update go/stop state
     let goStopState' = if catItemName c == "Hurt" && isJust (catItemDuration c) && fromJust (catItemDuration c) == 1
                           then GoState
@@ -196,7 +196,7 @@ updateItemList StopState worldState _ _ _ itemL = do
 updateItemList GoState worldState keys (mousex, mousey) (camerax, cameray) itemL = do
     let mainpanel = mainPanel worldState
     let itemButList = itemButtonList $ itemPanel worldState
-                          
+
     posItem <- updateItem worldState
     let tempItem = if lMouseDown keys then posItem else curItem mainpanel
     let item' = tempItem `seq` curItem mainpanel `seq` (if isNothing (placingItem mainpanel)
@@ -247,8 +247,8 @@ updateItemList GoState worldState keys (mousex, mousey) (camerax, cameray) itemL
     let (itemList', corkList', tarpList') = if placeItem
                                                then case (itemName item') of
                                                          "Cork"    -> (itemListE, item':corkListE, tarpListE)
-                                                         "Tarp"    -> (itemListE, corkListE, item':tarpListE) 
-                                                         "Eraser"  -> (itemListE, corkListE, tarpListE) 
+                                                         "Tarp"    -> (itemListE, corkListE, item':tarpListE)
+                                                         "Eraser"  -> (itemListE, corkListE, tarpListE)
                                                          _         -> (item':itemListE, corkListE, tarpListE)
                                                else (itemListE, corkListE, tarpListE)
 
@@ -268,7 +268,7 @@ updateCatAndItems GoState mainpanel _ _ _ lvlData =
                catItemDuration = Nothing},
             itemList mainpanel)
 updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _ =
-    let 
+    let
         (catVelX, catVelY) = catVelocity $ cat mainpanel
         (catX, catY) = catPos $ cat mainpanel
         catdirection = catDirection $ cat mainpanel
@@ -289,7 +289,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
         catTouchingPuddle = foldr (\puddle touching -> if rectIntersect puddle catrect
                                                           then True else touching)
                                   False (puddles mainpanel)
-    
+
         catBouncePogostick = catTouchingSurface && catitemname == "Pogostick"
         catFallUmbrella = not catTouchingSurface && catVelY < 0.0 &&
                           (catitemname == "Umbrella" || catitemname == "FallUmbrella")
@@ -312,7 +312,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
         -- update cat velocity
         catVel' = execState (do
-    
+
                                 -- gravity
                                 (velX, velY) <- get
                                 put (if catitemname /= "UpsUmbrellaActive" && catitemname /= "Hurt" && catitemname /= "Win"
@@ -437,7 +437,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                               -- apply position change
                               c <- get
                               put (updateCatPos c catPos')
-   
+
                               -- apply velocity change
                               c <- get
                               put (updateCatVel c catVel')
@@ -445,7 +445,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                               -- apply direction change
                               c <- get
                               put (c {catDirection = catdirection'})
-   
+
                               -- apply item effect
                               c <- get
                               put (effect c)
@@ -453,7 +453,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                               -- update animation
                               c <- get
                               put (updateCatAnim c)
-                             
+
                               -- revert back to walking from spring boots
                               c <- get
                               put (if ((catItemName c) == "SpringBoots") && catTouchingSurface && catVelY < 0
@@ -481,13 +481,13 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                               -- update item duration
                               c <- get
                               put (updateCatItemDuration c)
-   
+
                               -- teleport cat to mouse pos (DEBUG)
                               c <- get
                               put (if spaceKeyDown keys
                                       then updateCatPos c (mousex - cameraX, mousey - cameraY)
                                       else c)
-   
+
                               return ())
                          (cat mainpanel)
 
@@ -510,7 +510,7 @@ catRectResponse (catX, catY) (catVelX, catVelY) catDir catrect@(Rect catRX catRY
 
         in execState (do
                          -- vertical displacement
-                         ((x, y), d) <- get 
+                         ((x, y), d) <- get
                          put (if catVelY > 0.0
                                  then ((x, y - displaceDownY), d)
                                  else if (abs displaceY) < (abs displaceX)
@@ -524,3 +524,4 @@ catRectResponse (catX, catY) (catVelX, catVelY) catDir catrect@(Rect catRX catRY
                                  else ((x, y), d))
 
                          return ()) ((catX, catY), catDir)
+

@@ -113,3 +113,4 @@ catSkateFrameTime = 5
 -- cat pogostick
 catPogoFrameTime :: Int
 catPogoFrameTime = 5
+

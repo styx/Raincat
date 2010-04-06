@@ -21,3 +21,4 @@ messagePanelRect = Rect 0.0 maxWorldY (rectX toolsPanelRect) ((fromGLdouble scre
 
 messagePanelColor :: Color4 GLdouble
 messagePanelColor = Color4 0.91 0.91 0.91 1.0
+

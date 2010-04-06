@@ -1,4 +1,4 @@
-﻿module Menu.Menu
+module Menu.Menu
     (menuMain,
      menuDraw,
      howtoMain,
@@ -223,3 +223,4 @@ howtoDraw worldStateRef = do
     Nxt.Graphics.drawString 10.0 740.0 ("Mouse Pos: (" ++ (show mousex) ++ ", " ++ (show mousey) ++ ")") (Color4 0.7 0.7 0.7 1.0)-}
 
     Nxt.Graphics.end
+

@@ -1,4 +1,4 @@
-﻿module Settings.DisplaySettings
+module Settings.DisplaySettings
     (screenRes,
      screenResWidth,
      screenResHeight,
@@ -18,3 +18,4 @@ screenResHeight = 768.0
 
 refreshMS :: Int
 refreshMS = 16
+

@@ -1,4 +1,4 @@
-﻿module World.World
+module World.World
     (WorldState(WorldState),
      gameState,
      keysStateRef,
@@ -158,3 +158,4 @@ loadLevelBackgrounds levelPath level = do
                                                                          Nxt.Graphics.loadTexture (dataPath ++ "data/levels/pinball/pinball_1_0.png")]
 
     return (zip lvlPos lvlBgs)
+

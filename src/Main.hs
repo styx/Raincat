@@ -37,3 +37,4 @@ main = do
 exitMain :: IO ()
 exitMain = do
     throwIO $ ExitException ExitSuccess
+

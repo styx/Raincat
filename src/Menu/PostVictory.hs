@@ -2,7 +2,7 @@ module Menu.PostVictory
     (postVictoryMain,
      postVictoryDraw) where
 
-import Maybe
+import Data.Maybe
 import Graphics.Rendering.OpenGL as GL hiding (get)
 import Graphics.UI.GLUT hiding (get)
 import Data.IORef
@@ -63,3 +63,4 @@ postVictoryDraw worldStateRef = do
     --Nxt.Graphics.drawRect backRect (Color4 0.0 1.0 1.0 0.5)
 
     Nxt.Graphics.end
+

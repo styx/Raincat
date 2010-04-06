@@ -23,3 +23,4 @@ initEndMarker (posX, posY) = do
                                    ((fromIntegral $ textureHeight markerTex)::Double)
 
     return (EndMarker markerRect markerTex)
+

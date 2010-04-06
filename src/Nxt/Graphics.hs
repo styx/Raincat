@@ -33,7 +33,7 @@ initWindow windowSize windowTitle = do
 
     initialWindowSize $= windowSize
     initialDisplayMode $= [DoubleBuffered]
-    
+
     createWindow windowTitle
 
     return ()
@@ -179,19 +179,19 @@ cycleTextures filePath frames frameTime = do
 -- cycleTextures2
 cycleTextures2 :: [Char] -> Int -> Int -> Int -> IO ([Nxt.Types.Texture])
 cycleTextures2 filePath frames lastFrame frameTime = do
-	texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
-	texLists2 <- Nxt.Graphics.loadTexture (filePath ++ (show lastFrame) ++ ".png");
-	let textures = foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) (repeat texLists2) texLists
+    texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
+    texLists2 <- Nxt.Graphics.loadTexture (filePath ++ (show lastFrame) ++ ".png");
+    let textures = foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) (repeat texLists2) texLists
 
-	return (textures)
+    return (textures)
 
 -- repeatTexturesN
 repeatTexturesN :: [Char] -> Int -> Int -> Int -> Int -> Int -> Int -> IO ([Nxt.Types.Texture])
 repeatTexturesN filePath frames startRepeat endRepeat nRepeats lastFrame frameTime = do
-	texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
-	repeatTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [startRepeat..endRepeat]
-	endTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [(endRepeat + 1)..lastFrame]
-	let textures = (take 60 (repeat $ last endTexLists))
+    texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
+    repeatTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [startRepeat..endRepeat]
+    endTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [(endRepeat + 1)..lastFrame]
+    let textures = (take 60 (repeat $ last endTexLists))
                    ++
                    (foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) [] texLists)
                    ++
@@ -199,4 +199,5 @@ repeatTexturesN filePath frames startRepeat endRepeat nRepeats lastFrame frameTi
                    ++
                    (foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) (repeat $ last endTexLists) endTexLists)
 
-	return (textures)
+    return (textures)
+

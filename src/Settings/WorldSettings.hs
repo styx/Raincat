@@ -1,4 +1,4 @@
-﻿module Settings.WorldSettings
+module Settings.WorldSettings
     (minWorldX,
      maxWorldX,
      minWorldY,
@@ -31,3 +31,4 @@ fireHydrantFrameTime = 7
 
 hairdryerFrameTime :: Int
 hairdryerFrameTime = 7
+

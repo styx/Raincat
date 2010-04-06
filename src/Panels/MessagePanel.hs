@@ -6,3 +6,4 @@ data MessagePanel = MessagePanel
     {
         messageDisplay  :: [Char]
     }
+

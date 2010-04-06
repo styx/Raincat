@@ -53,3 +53,4 @@ translateMousePos (MousePos x y) winW winH =
         wH' = (fromIntegral (fromGLsizei winH))
         in (x' * (sW' / wW'),
             sH' - ((sH' - y') * (sH' / wH')))
+

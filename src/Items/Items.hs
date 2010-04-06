@@ -17,7 +17,7 @@ module Items.Items
      drawItemBut,
      mouseOverItemBut) where
 
-import Maybe
+import Data.Maybe
 import Graphics.Rendering.OpenGL as GL
 import Nxt.Graphics
 import Nxt.Types
@@ -28,7 +28,7 @@ data Item = Item
     {
         itemPos         :: Nxt.Types.Vector2d,
         itemTexture     :: Nxt.Types.Texture,
-	    itemEffect	    :: Cat -> Cat,
+        itemEffect      :: Cat -> Cat,
         itemName        :: [Char]
     }
 instance Eq Item where
@@ -73,6 +73,7 @@ drawItemBut (ItemButton (itemPosX, itemPosY) itemTexture _ _ _)  = do
 -- mouseOverItemBut
 mouseOverItemBut :: MousePos -> ItemButton -> Bool
 mouseOverItemBut (MousePos mouseX mouseY) (ItemButton (itemX, itemY) itemTexture _ _ _) =
-    pointInRect (fromIntegral mouseX, fromIntegral mouseY) itemRect 
+    pointInRect (fromIntegral mouseX, fromIntegral mouseY) itemRect
     where
         itemRect = Nxt.Types.Rect itemX itemY (fromIntegral $ textureWidth itemTexture) (fromIntegral $ textureHeight itemTexture)
+

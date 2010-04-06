@@ -15,22 +15,22 @@ module Cat.Cat
      laserTextures,
      Cat(Cat),
      initCat,
-	 catPos,
+     catPos,
      catVelocity,
      catDirection,
-	 catTexture,
+     catTexture,
      catItemName,
      catItemDuration,
      catAnimations,
-	 drawCat,
-	 catHitbox,
+     drawCat,
+     catHitbox,
      catPoly,
-	 updateCatVel,
+     updateCatVel,
      updateCatPos,
      updateCatAnim,
      updateCatItemDuration) where
 
-import Maybe
+import Data.Maybe
 import Graphics.Rendering.OpenGL as GL
 import Nxt.Graphics
 import Nxt.Types
@@ -56,15 +56,15 @@ data CatAnimations = CatAnimations
     }
 
 data Cat = Cat
-	{
-		catPos          :: Vector2d,
+    {
+        catPos          :: Vector2d,
         catVelocity     :: Vector2d,
         catDirection    :: Direction,
         catTexture      :: [Nxt.Types.Texture],
         catItemName     :: [Char],
         catItemDuration :: Maybe Int,
-		catAnimations   :: CatAnimations
-	}
+        catAnimations   :: CatAnimations
+    }
 
 -- initCatAnimations
 initCatAnimations :: IO (CatAnimations)
@@ -100,17 +100,17 @@ initCat initPos = do
 drawCat :: Cat -> IO ()
 -- the below pattern match is for a very crude hack for the post victory laser screen :(
 drawCat (Cat (540.0, 340.0) catVel catDir catTexture _ _ _) =
-	Nxt.Graphics.drawTextureFlip 540.0 340.0 (head catTexture) (1.0::GLdouble) False
+    Nxt.Graphics.drawTextureFlip 540.0 340.0 (head catTexture) (1.0::GLdouble) False
 drawCat (Cat (catPosX, catPosY) catVel catDir catTexture _ _ _) =
-	Nxt.Graphics.drawTextureFlip (catPosX - ((fromIntegral $ textureWidth (head catTexture)) / 2)) (catPosY) (head catTexture) (1.0::GLdouble) flip
+    Nxt.Graphics.drawTextureFlip (catPosX - ((fromIntegral $ textureWidth (head catTexture)) / 2)) (catPosY) (head catTexture) (1.0::GLdouble) flip
     where flip = case catDir of
                     DirLeft -> True
                     DirRight -> False
 
 -- catHitbox
 catHitbox :: Cat -> Nxt.Types.Rect
-catHitbox (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) = 
-	Nxt.Types.Rect (catPosX + xOffset - (width / 2)) catPosY  width height
+catHitbox (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
+    Nxt.Types.Rect (catPosX + xOffset - (width / 2)) catPosY  width height
     where width = 50.0
           height = 80.0
           xOffset = case catDir of
@@ -119,8 +119,8 @@ catHitbox (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
 
 -- catPoly
 catPoly :: Cat -> Nxt.Types.Poly
-catPoly (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) = 
-	Poly 4 [(catPosX + xOffset - (width / 2), catPosY),
+catPoly (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
+    Poly 4 [(catPosX + xOffset - (width / 2), catPosY),
             (catPosX + xOffset + (width / 2), catPosY),
             (catPosX + xOffset + (width / 2), catPosY + height),
             (catPosX + xOffset - (width / 2), catPosY + height)]
@@ -144,7 +144,7 @@ updateCatVel c@(Cat (catPosX, catPosY) catVel catDir _ _ _ _) (newVelX, newVelY)
 -- updateCatPos
 updateCatPos :: Cat -> Nxt.Types.Vector2d -> Cat
 updateCatPos cat pos =
-	cat {catPos = pos}
+    cat {catPos = pos}
 
 -- updateCatAnim
 updateCatAnim :: Cat -> Cat
@@ -158,3 +158,4 @@ updateCatItemDuration c@(Cat _ _ _ _ _ (Just itemDur) anim) =
     if itemDur <= 0
        then c {catItemDuration = Nothing, catItemName = "NoItem", catTexture = walkTextures anim}
        else c {catItemDuration = Just (itemDur - 1)}
+

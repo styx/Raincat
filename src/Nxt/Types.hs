@@ -1,4 +1,4 @@
-﻿module Nxt.Types
+module Nxt.Types
     (Vector2d,
      Texture(Texture),
      textureWidth,
@@ -76,10 +76,10 @@ type Vector2d = (Double, Double)
 
 -- Poly
 data Poly = Poly
-	{
-		polySides       :: Int,
-		polyVertices    :: [Vector2d]
-	}
+    {
+        polySides       :: Int,
+        polyVertices    :: [Vector2d]
+    }
     deriving Show
 
 -- dotProduct
@@ -97,7 +97,7 @@ polyIntersect polyA polyB =
         polyBPairVerts = zip polyBPrevVerts polyBVerts
 
         normalizeAxis :: (Vector2d, Vector2d) -> Vector2d
-        normalizeAxis (prevVert, vert) = 
+        normalizeAxis (prevVert, vert) =
             let
                 (ptPrevX, ptPrevY) = prevVert
                 (ptCurrX, ptCurrY) = vert
@@ -105,7 +105,7 @@ polyIntersect polyA polyB =
                 axisY = ptCurrX - ptPrevX
                 tmp = sqrt (axisX * axisX + axisY * axisY)
             in
-                (axisX / tmp, axisY / tmp) 
+                (axisX / tmp, axisY / tmp)
 
         projRange :: [Vector2d] -> Vector2d -> (Double,Double)
         projRange vertices axis =
@@ -115,13 +115,14 @@ polyIntersect polyA polyB =
                 max = maximum projLengths
             in
                 (min,max)
-                    
+
         overlap :: (Vector2d, Vector2d) -> Bool
         overlap pairVerts =
             not (maxA < minB || minA > maxB)
             where axis = normalizeAxis pairVerts
-                  (minA, maxA) = projRange polyAVerts axis 
+                  (minA, maxA) = projRange polyAVerts axis
                   (minB, maxB) = projRange polyBVerts axis
 
     in
         all overlap polyAPairVerts && all overlap polyBPairVerts
+

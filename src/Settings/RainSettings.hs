@@ -1,4 +1,4 @@
-﻿module Settings.RainSettings
+module Settings.RainSettings
     (rainWidth,
      rainHeight,
      rainFallSpeed,
@@ -26,3 +26,4 @@ rainSpacing = 1
 
 rainColor :: [Color4 GLdouble]
 rainColor = [Color4 0.0 0.0 1.0 0.3]
+

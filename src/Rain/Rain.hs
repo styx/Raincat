@@ -4,7 +4,7 @@ module Rain.Rain
      rainRect,
      rainPoly) where
 
-import Random
+import System.Random
 import Graphics.Rendering.OpenGL
 import World.World
 import Panels.MainPanel
@@ -43,7 +43,7 @@ updateRain worldState = do
                         ++
                         map (\cork -> (itemRect cork)) (corkList (mainPanel worldState))
                         ++
-                        (rectSurfaces (mainPanel worldState))  
+                        (rectSurfaces (mainPanel worldState))
     let rainRectCol = collideRainRect rainPolyCol rectSurfaces'
 
     return rainRectCol

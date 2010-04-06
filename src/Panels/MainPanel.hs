@@ -29,7 +29,7 @@ data MainPanel = MainPanel
         cameraPos           :: Vector2d,
         raindrops           :: [Vector2d],
         backgroundTexture   :: Nxt.Types.Texture,
-        cat			        :: Cat.Cat.Cat,
+        cat                 :: Cat.Cat.Cat,
         rectSurfaces        :: [Rect],
         polySurfaces        :: [Poly],
         puddles             :: [Rect],
@@ -42,3 +42,4 @@ data MainPanel = MainPanel
         placingItem         :: Maybe Item,
         musak               :: Music
     }
+
