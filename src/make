@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec ghc -O --make Main.hs

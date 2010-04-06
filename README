@@ -1,0 +1,56 @@
+Raincat
+Game Creation Society - Fall 08
+www.gamecreation.org
+
+
+HOW TO START THE GAME:
+----------------------
+./raincat
+
+
+CHANGELOG:
+----------
+Version 1.1:
+    - Changed initial item placement from click to select, click to place
+      to drag n' drop.
+    - Replaced eraser tool with right click to erase an item
+    - Now properly detecting mouse clicks after window resize
+Version 1.0:
+    - Initial version
+
+NOTES:
+------
+The Raincat executable was compiled with GHC 6.12.1 on Arch Linux i686.
+If you are having problems running the game, the win32 build runs under
+wine.
+
+Runtimes for the following libraries are assumed to be installed:
+GLUT
+OpenGL
+SDL
+SDL_image
+SDL_mixer
+
+
+TROUBLESHOOTING:
+----------------
+If you receive the error:
+"user error (Mix_LoadMUS SDL message: Module format not recognized)"
+when trying to run Raincat, this is because your SDL-mixer library
+was not compiled with mp3 support. You will need to recompile that
+with mp3 support or otherwise obtain a copy with mp3 support in order
+to run the game.
+
+
+PROJECT TEAM:
+-------------
+Garrick Chin        - Project Leader/Programmer/Level Designer
+Susan Lin           - Artist
+SooHyun Jang        - Artist
+Anthony Maurice     - Programmer
+William Wang        - Programmer
+Andrew Zheng        - Programmer
+Rachel Berkowitz    - Music Composer
+Spencer Ying        - Artist/Level Designer
+Tal Stramer         - Level Editor Programmer
+
