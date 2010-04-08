@@ -19,8 +19,8 @@ import Nxt.Types
 import System.IO
 import Control.Exception
 import Settings.DisplaySettings
-import Nxt.Types
 import Nxt.Graphics
+import Control.Arrow (second)
 
 data LevelData = LevelData
         {
@@ -42,23 +42,23 @@ data Level = Level
         }
 
 -- readInt
-readInt' :: [Char] -> Int
-readInt' s = read s
+readInt' :: String -> Int
+readInt' = read
 
 -- readDouble
-readDouble' :: [Char] -> Double
-readDouble' s = read s
+readDouble' :: String -> Double
+readDouble' = read
 
 -- openLevel
-openLevel :: [Char] -> IO(Level)
+openLevel :: String -> IO Level
 openLevel file = do
     inh <- openFile file ReadMode
     level <- parseLevel inh
     hClose inh
-    return (level)
+    return level
 
 -- parseLevel
-parseLevel :: Handle -> IO(Level)
+parseLevel :: Handle -> IO Level
 parseLevel inh = do
     levelDimensionS <- hGetLine inh
     let levelDimension = map readInt' (words levelDimensionS)
@@ -74,7 +74,7 @@ parseLevel inh = do
     let levelDataT = transformCoord levelData
     let level = Level (head levelDimension) (last levelDimension) itemCountsList levelDataT
 
-    return (level)
+    return level
 
 -- transform coordinates from using top left as (0,0) to bottom left as (0,0)
 transformCoord :: LevelData -> LevelData
@@ -83,14 +83,13 @@ transformCoord (LevelData end cat fireHydrantsL fireHydrantsR puddles rects poly
     where transformR (Rect rx ry rw rh) = let sh' = fromGLdouble screenResHeight
                                           in Rect rx (sh' - ry) rw (-rh)
           transformP (Poly polyS polyVs) = let sh' = fromGLdouble screenResHeight
-                                           in Poly polyS (map (\(vertx, verty) -> (vertx, sh' - verty)) polyVs)
+                                           in Poly polyS (map (second (sh' -)) polyVs)
 
 -- parseShape
-
-parseShape :: Int -> Handle -> LevelData -> IO(LevelData)
+parseShape :: Int -> Handle -> LevelData -> IO LevelData
 parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrantsR puddles rects polys _)) = do
     ineof <- hIsEOF inh
-    if (ineof || numShapes <= 0)
+    if ineof || numShapes <= 0
       then return leveldata
       else
         do
@@ -101,13 +100,13 @@ parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrant
             let poly = Poly (length verts) verts
             let id = head toks
             let newLevelData = case id of
-                                 "rectangle"       -> leveldata {levelRects = ((parseRect coord):rects)}
-                                 "cat"              -> leveldata {levelCat = (parseRect coord)}
-                                 "end"              -> leveldata {levelEnd = (parseRect coord)}
-                                 "firehydrantLeft"  -> leveldata {levelFireHydrantsL = ((parseRect coord):fireHydrantsL)}
-                                 "firehydrantRight" -> leveldata {levelFireHydrantsR = ((parseRect coord):fireHydrantsR)}
-                                 "puddle"           -> leveldata {levelPuddles = ((parseRect coord):puddles)}
-                                 "polygon"          -> leveldata {levelPolys = (poly:polys)}
+                                 "rectangle"        -> leveldata {levelRects = parseRect coord : rects}
+                                 "cat"              -> leveldata {levelCat = parseRect coord}
+                                 "end"              -> leveldata {levelEnd = parseRect coord}
+                                 "firehydrantLeft"  -> leveldata {levelFireHydrantsL = parseRect coord : fireHydrantsL}
+                                 "firehydrantRight" -> leveldata {levelFireHydrantsR = parseRect coord : fireHydrantsR}
+                                 "puddle"           -> leveldata {levelPuddles = parseRect coord : puddles}
+                                 "polygon"          -> leveldata {levelPolys = poly : polys}
             parseShape (numShapes-1) inh newLevelData
 
 -- parseVerts
@@ -119,7 +118,7 @@ parseVerts (x:y:vs) = (x,y):parseVerts vs
 -- parseRect
 parseRect :: [Double] -> Rect
 parseRect coords =
-    if ((length coords) /= 8)
+    if length coords /= 8
     then throw (PatternMatchFail "Incorrect number of Coords")
     else Rect bottomLX bottomLY width height
         where bottomLX = head coords

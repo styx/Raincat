@@ -20,18 +20,18 @@ import Control.Monad.State
 import Level.Level
 import Settings.Path
 
-howtoRect = (Nxt.Types.Rect 690.0 470.0 200.0 60.0)
-backRect = (Nxt.Types.Rect 785.0 626.0 200.0 60.0)
+howtoRect = Nxt.Types.Rect 690.0 470.0 200.0 60.0
+backRect  = Nxt.Types.Rect 785.0 626.0 200.0 60.0
 
-lvl1Rect = (Nxt.Types.Rect 543.0 245.0 90.0 90.0)
-lvl2Rect = (Nxt.Types.Rect 649.0 245.0 90.0 90.0)
-lvl3Rect = (Nxt.Types.Rect 753.0 245.0 90.0 90.0)
-lvl4Rect = (Nxt.Types.Rect 543.0 140.0 90.0 90.0)
-lvl5Rect = (Nxt.Types.Rect 649.0 140.0 90.0 90.0)
-lvl6Rect = (Nxt.Types.Rect 753.0 140.0 90.0 90.0)
-lvl7Rect = (Nxt.Types.Rect 543.0 37.0 90.0 90.0)
-lvl8Rect = (Nxt.Types.Rect 649.0 37.0 90.0 90.0)
-lvl9Rect = (Nxt.Types.Rect 753.0 37.0 90.0 90.0)
+lvl1Rect = Nxt.Types.Rect 543.0 245.0 90.0 90.0
+lvl2Rect = Nxt.Types.Rect 649.0 245.0 90.0 90.0
+lvl3Rect = Nxt.Types.Rect 753.0 245.0 90.0 90.0
+lvl4Rect = Nxt.Types.Rect 543.0 140.0 90.0 90.0
+lvl5Rect = Nxt.Types.Rect 649.0 140.0 90.0 90.0
+lvl6Rect = Nxt.Types.Rect 753.0 140.0 90.0 90.0
+lvl7Rect = Nxt.Types.Rect 543.0  37.0 90.0 90.0
+lvl8Rect = Nxt.Types.Rect 649.0  37.0 90.0 90.0
+lvl9Rect = Nxt.Types.Rect 753.0  37.0 90.0 90.0
 
 -- menuMain
 menuMain :: IORef WorldState -> (IORef WorldState -> IO ()) -> IO ()
@@ -148,7 +148,7 @@ menuMain worldStateRef mainCallback = do
     Glut.postRedisplay Nothing
     endTime <- getCurrentTime
 
-    let timeDiff = truncate (1000 * (diffUTCTime endTime startTime))
+    let timeDiff = truncate (1000 * diffUTCTime endTime startTime)
         timeSleep = if timeDiff < refreshMS then refreshMS - timeDiff else 0
 
     Glut.addTimerCallback timeSleep (mainCallback worldStateRef)
@@ -201,7 +201,7 @@ howtoMain worldStateRef mainCallback = do
     Glut.postRedisplay Nothing
     endTime <- getCurrentTime
 
-    let timeDiff = truncate (1000 * (diffUTCTime endTime startTime))
+    let timeDiff = truncate (1000 * diffUTCTime endTime startTime)
         timeSleep = if timeDiff < refreshMS then refreshMS - timeDiff else 0
 
     Glut.addTimerCallback timeSleep (mainCallback worldStateRef)

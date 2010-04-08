@@ -68,8 +68,8 @@ overlapRect (Rect r1x r1y r1Width r1Height) (Rect r2x r2y r2Width r2Height) =
     Rect x y width height
     where x = max r1x r2x
           y = max r1y r2y
-          width = (min (r1x + r1Width) (r2x + r2Width)) - x
-          height = (min (r1y + r1Height) (r2y + r2Height)) - r2Height
+          width = min (r1x + r1Width) (r2x + r2Width) - x
+          height = min (r1y + r1Height) (r2y + r2Height) - r2Height
 
 -- Vector2d
 type Vector2d = (Double, Double)
@@ -90,10 +90,10 @@ dotProduct (p1X, p1Y) (p2X, p2Y) = p1X * p2X + p1Y * p2Y
 polyIntersect :: Poly -> Poly -> Bool
 polyIntersect polyA polyB =
     let polyAVerts = polyVertices polyA
-        polyAPrevVerts = (last polyAVerts):(init polyAVerts)
+        polyAPrevVerts = last polyAVerts : init polyAVerts
         polyAPairVerts = zip polyAPrevVerts polyAVerts
         polyBVerts = polyVertices polyB
-        polyBPrevVerts = (last polyBVerts):(init polyBVerts)
+        polyBPrevVerts = last polyBVerts : init polyBVerts
         polyBPairVerts = zip polyBPrevVerts polyBVerts
 
         normalizeAxis :: (Vector2d, Vector2d) -> Vector2d
@@ -110,7 +110,7 @@ polyIntersect polyA polyB =
         projRange :: [Vector2d] -> Vector2d -> (Double,Double)
         projRange vertices axis =
             let
-                projLengths = map (\vert -> dotProduct vert axis) vertices
+                projLengths = map (`dotProduct` axis) vertices
                 min = minimum projLengths
                 max = maximum projLengths
             in

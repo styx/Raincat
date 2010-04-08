@@ -54,13 +54,13 @@ gameMain worldStateRef mainCallback = do
         cameraX' = if leftKeyDown keys' && cameraX < 0.0
                       then cameraX + WorldSettings.cameraSpeed
                       else
-                        if rightKeyDown keys' && cameraX > -((fromIntegral $ levelWidth lvl)::Double) + (fromGLdouble screenResWidth)
+                        if rightKeyDown keys' && cameraX > -(fromIntegral $ levelWidth lvl :: Double) + fromGLdouble screenResWidth
                            then cameraX - WorldSettings.cameraSpeed
                            else cameraX
         cameraY' = if upKeyDown keys' && cameraY > 0.0
                       then cameraY - WorldSettings.cameraSpeed
                       else
-                        if downKeyDown keys' && cameraY < ((fromIntegral $ levelHeight lvl)::Double) - (fromGLdouble screenResHeight)
+                        if downKeyDown keys' && cameraY < (fromIntegral $ levelHeight lvl :: Double) - fromGLdouble screenResHeight
                            then cameraY + WorldSettings.cameraSpeed
                            else cameraY
 
@@ -80,7 +80,7 @@ gameMain worldStateRef mainCallback = do
                         else goStopBtn {goStopState = goStopState'}
 
     let (cat', itemL) = updateCatAndItems goStopState' mainpanel keys' (cameraX', cameraY') (mousex, mousey) lvlData
-        catUsedItems = (itemList mainpanel) \\ itemL
+        catUsedItems = itemList mainpanel \\ itemL
 
     -- update items
     (item', (itemList', corkList', tarpList'), placedItem, placingItem', erasedItems) <- updateItemList goStopState' worldState keys' (mousex, mousey) (cameraX', cameraY') itemL
@@ -91,26 +91,26 @@ gameMain worldStateRef mainCallback = do
                                      -- placed an item in world
                                      iBL <- get
                                      put (if placedItem
-                                             then map (\itemBut -> if (itemName $ itemButItem itemBut) == itemName item'
-                                                                      then itemBut {itemButCount = (itemButCount itemBut) - 1}
+                                             then map (\itemBut -> if itemName (itemButItem itemBut) == itemName item'
+                                                                      then itemBut {itemButCount = itemButCount itemBut - 1}
                                                                       else itemBut) iBL
                                              else iBL)
 
                                      -- erased an item from world
                                      iBL <- get
                                      put (if not (null erasedItems)
-                                             then foldr (\ersItemName ibList -> map (\itemBut -> if (itemName $ itemButItem itemBut) == ersItemName
-                                                                                                    then itemBut {itemButCount = (itemButCount itemBut) + 1}
-                                                                                                    else itemBut) ibList)
+                                             then foldr (\ersItemName -> map (\itemBut -> if itemName (itemButItem itemBut) == ersItemName
+                                                                                                    then itemBut {itemButCount = itemButCount itemBut + 1}
+                                                                                                    else itemBut))
                                                         iBL erasedItems
                                               else iBL)
 
                                      -- cat used an item in world
                                      iBL <- get
                                      put (if not (null catUsedItems)
-                                             then foldr (\usedItem ibList -> map (\itemBut -> if (itemName $ itemButItem itemBut) == itemName usedItem
-                                                                                                 then itemBut {itemButCount = (itemButCount itemBut) + 1}
-                                                                                                 else itemBut) ibList)
+                                             then foldr (\usedItem -> map (\itemBut -> if itemName (itemButItem itemBut) == itemName usedItem
+                                                                                                 then itemBut {itemButCount = itemButCount itemBut + 1}
+                                                                                                 else itemBut))
                                                         iBL catUsedItems
                                              else iBL)
 
@@ -121,10 +121,10 @@ gameMain worldStateRef mainCallback = do
     let fireHydrantsL = if catItemName cat' == "Wrench"
                            then foldr (\fh fhList -> if rectIntersect (catHitbox cat') (fireHydrantRect fh)
                                                         then case (fireHydrantDir fh) of
-                                                                  DirLeft   -> if (fst $ catPos cat') > ((rectX $ fireHydrantRect fh) + (rectWidth $ fireHydrantRect fh))
+                                                                  DirLeft   -> if fst (catPos cat') > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
-                                                                  DirRight  -> if (fst $ catPos cat') < (rectX $ fireHydrantRect fh)
+                                                                  DirRight  -> if fst (catPos cat') < rectX (fireHydrantRect fh)
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
                                                         else fh:fhList)
@@ -135,7 +135,7 @@ gameMain worldStateRef mainCallback = do
     -- update game state (menu, post victory)
     let gameState' = if escKeyDown keys'
                         then MainMenuState
-                        else if catItemName cat' == "Win" && (isJust $ catItemDuration cat') && fromJust (catItemDuration cat') == 1
+                        else if catItemName cat' == "Win" && isJust (catItemDuration cat') && fromJust (catItemDuration cat') == 1
                                 then PostVictoryState
                                 else GameRunningState
 
@@ -153,7 +153,7 @@ gameMain worldStateRef mainCallback = do
     Glut.postRedisplay Nothing
     endTime <- getCurrentTime
 
-    let timeDiff = truncate (1000 * (diffUTCTime endTime startTime))
+    let timeDiff = truncate (1000 * diffUTCTime endTime startTime)
         timeSleep = if timeDiff < refreshMS then refreshMS - timeDiff else 0
     --print timeDiff
 
@@ -168,10 +168,10 @@ updateFireHydrants StopState cat worldState =
     let fireHydrantsL = if catItemName cat == "Wrench"
                            then foldr (\fh fhList -> if rectIntersect (catHitbox cat) (fireHydrantRect fh)
                                                         then case (fireHydrantDir fh) of
-                                                                  DirLeft   -> if (fst $ catPos cat) > ((rectX $ fireHydrantRect fh) + (rectWidth $ fireHydrantRect fh))
+                                                                  DirLeft   -> if fst (catPos cat) > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
-                                                                  DirRight  -> if (fst $ catPos cat) < (rectX $ fireHydrantRect fh)
+                                                                  DirRight  -> if fst (catPos cat) < rectX (fireHydrantRect fh)
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
                                                         else fh:fhList)
@@ -180,7 +180,7 @@ updateFireHydrants StopState cat worldState =
         in map updateFireHydrant fireHydrantsL
 
 -- updateItemList
-updateItemList :: GoStopState -> WorldState -> KeysState -> Vector2d -> Vector2d -> [Item] -> IO (Item, ([Item], [Item], [Item]), Bool, Maybe Item, [[Char]])
+updateItemList :: GoStopState -> WorldState -> KeysState -> Vector2d -> Vector2d -> [Item] -> IO (Item, ([Item], [Item], [Item]), Bool, Maybe Item, [String])
 -- updateItemList (StopState)
 updateItemList StopState worldState _ _ _ itemL = do
     let mainpanel = mainPanel worldState
@@ -202,42 +202,39 @@ updateItemList GoState worldState keys (mousex, mousey) (camerax, cameray) itemL
     let item' = tempItem `seq` curItem mainpanel `seq` (if isNothing (placingItem mainpanel)
                    then tempItem
                   else curItem mainpanel)
-                {itemPos = (mousex - camerax - ((fromIntegral $ textureWidth $ itemTexture tempItem)::Double) / 2.0,
-                                            mousey - cameray - ((fromIntegral $ textureHeight $ itemTexture tempItem)::Double) / 2.0)}
-    let curItemIntersects = foldr (\item intersects -> if itemIntersects (curItem mainpanel) item
-                                                          then True else intersects)
-                                  False itemL
+                {itemPos = (mousex - camerax - (fromIntegral $ textureWidth $ itemTexture tempItem :: Double) / 2.0,
+                                            mousey - cameray - (fromIntegral $ textureHeight $ itemTexture tempItem :: Double) / 2.0)}
+    let curItemIntersects = foldr ((||) . itemIntersects (curItem mainpanel))
+                                False itemL
                             ||
-                               foldr (\cork intersects -> if itemIntersects (curItem mainpanel) cork
-                                                              then True else intersects)
+                               foldr ((||) . itemIntersects (curItem mainpanel))
                                 False (corkList mainpanel)
                             ||
-                               foldr (\tarp intersects -> if itemIntersects (curItem mainpanel) tarp
-                                                              then True else intersects)
+                               foldr ((||) . itemIntersects (curItem mainpanel))
                                 False (tarpList mainpanel)
 
     -- remove any items if eraser was clicked on them
     let ((itemListE, corkListE, tarpListE)) = if rMouseDown keys
-                                                 then (filter (\item -> not (itemIntersects (curItem mainpanel) item)) itemL,
-                                                       filter (\cork -> not (itemIntersects (curItem mainpanel) cork)) (corkList mainpanel),
-                                                       filter (\tarp -> not (itemIntersects (curItem mainpanel) tarp)) (tarpList mainpanel))
+                                                 then (filter (not . itemIntersects (curItem mainpanel)) itemL,
+                                                       filter (not . itemIntersects (curItem mainpanel)) (corkList mainpanel),
+                                                       filter (not . itemIntersects (curItem mainpanel)) (tarpList mainpanel))
                                                  else (itemL, corkList mainpanel, tarpList mainpanel)
-        erasedItems = (itemL \\ itemListE) ++ ((corkList mainpanel) \\ corkListE) ++ ((tarpList mainpanel) \\ tarpListE)
+        erasedItems = (itemL \\ itemListE) ++ (corkList mainpanel \\ corkListE) ++ (tarpList mainpanel \\ tarpListE)
         erasedItemNames = map itemName erasedItems
 
     -- Note: need to force evaluation of item' to prevent lazy evaluation of it (causes memory leak!)
     let forceItemEval = item' `seq` True
 
     -- Make sure we have at least 1 item of this to use
-    let itemCountValid = if itemName item' /= "Eraser"
-                            then foldr (\itemBut countValid -> if (itemName $ itemButItem itemBut) == itemName item'
-                                                                  then (itemButCount itemBut) > 0
+    let itemCountValid = itemName item' /= "Eraser" &&
+                            foldr (\itemBut countValid -> if itemName (itemButItem itemBut) == itemName item'
+                                                                  then itemButCount itemBut > 0
                                                                   else countValid) True itemButList
-                            else False
-    let placeItem = forceItemEval && lMousePrevDown keys && not (lMouseDown keys) && not curItemIntersects && mousex < maxWorldX && (itemName item') /= "Eraser" && itemCountValid && isJust (placingItem mainpanel)
+
+    let placeItem = forceItemEval && lMousePrevDown keys && not (lMouseDown keys) && not curItemIntersects && mousex < maxWorldX && itemName item' /= "Eraser" && itemCountValid && isJust (placingItem mainpanel)
     let placingItem' = if placeItem || not (lMouseDown keys)
                           then Nothing
-                          else if lMouseDown keys && (itemName item') /= "Eraser" && itemCountValid
+                          else if lMouseDown keys && itemName item' /= "Eraser" && itemCountValid
                                   then if isJust (placingItem mainpanel)
                                           then placingItem mainpanel
                                           else Just item'
@@ -261,7 +258,7 @@ updateCatAndItems GoState mainpanel _ _ _ lvlData =
         catTex = catTexture c
         idleTex = head $ idleTextures $ catAnimations c
         walkTex = walkTextures $ catAnimations c
-        catTex' = [idleTex] ++ walkTex
+        catTex' = idleTex : walkTex
         in (c {catPos = (rectX $ levelCat lvlData, rectY $ levelCat lvlData),
                catTexture = catTex', catDirection = DirRight,
                catVelocity = (catWalkVelX, 0.0), catItemName = "NoItem",
@@ -279,20 +276,19 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
         -- update cat and world surface collisions
         catTouchedRects = foldr (\rect touchedRects -> if rectIntersect rect catrect
                                                           then rect:touchedRects else touchedRects)
-                                [] ((rectSurfaces mainpanel) ++ corkRects)
-                          where corkRects = map (\cork -> itemRect cork) (corkList mainpanel)
-        catTouchingPoly = foldr (\poly touching -> (polyIntersect poly catpoly) || touching)
+                                [] (rectSurfaces mainpanel ++ corkRects)
+                          where corkRects = map itemRect (corkList mainpanel)
+        catTouchingPoly = foldr (\poly -> (polyIntersect poly catpoly ||))
                                 False (polySurfaces mainpanel)
         catTouchingSurface = not $ null catTouchedRects || catTouchingPoly
 
         -- update cat and puddle collisions
-        catTouchingPuddle = foldr (\puddle touching -> if rectIntersect puddle catrect
-                                                          then True else touching)
+        catTouchingPuddle = foldr (\puddle -> (rectIntersect puddle catrect ||))
                                   False (puddles mainpanel)
 
         catBouncePogostick = catTouchingSurface && catitemname == "Pogostick"
         catFallUmbrella = not catTouchingSurface && catVelY < 0.0 &&
-                          (catitemname == "Umbrella" || catitemname == "FallUmbrella")
+                          catitemname `elem` ["Umbrella", "FallUmbrella"]
         catUpsUmbrella = catitemname == "UpsUmbrellaActive" || (catTouchingPuddle && catitemname == "UpsUmbrella" && catVelY < 0.0)
 
         -- update cat pos, direction
@@ -346,57 +342,50 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                                                               else touchedPuddle)
                                  Nothing (puddles mainpanel)
 
-        catTouchingRain = foldr (\rain isWet -> if rectIntersect (rainRect rain) catrect
-                                                   then True
-                                                   else isWet)
+        catTouchingRain = foldr (\rain -> (rectIntersect (rainRect rain) catrect ||))
                                 False (raindrops mainpanel)
         catTouchedFireHydrant = foldr (\fh touchedFH -> if rectIntersect (fireHydrantRect fh) catrect
                                                            then Just fh
                                                            else touchedFH)
                                 Nothing (fireHydrants mainpanel)
 
-        catWetFromRain = if catTouchingRain
-                            then case catitemname of
+        catWetFromRain = catTouchingRain &&
+                            case catitemname of
                                       "Shield"          -> False
                                       "Poncho"          -> False
                                       "Umbrella"        -> False
                                       "FallUmbrella"    -> False
                                       _                 -> True
-                            else False
 
-        catWetFromPuddle = if isJust catTouchedPuddle
-                              then case catitemname of
+        catWetFromPuddle = isJust catTouchedPuddle &&
+                                case catitemname of
                                         "Shield"            -> False
                                         "UpsUmbrella"       -> False
                                         "UpsUmbrellaActive" -> False
-                                        "RainBoots"         -> (rectY catrect) + (rectHeight catrect) < (rectY (fromJust catTouchedPuddle)) + (rectHeight (fromJust catTouchedPuddle))
-                                        "Skateboard"        -> (rectY catrect) + (rectHeight catrect) < (rectY (fromJust catTouchedPuddle)) + (rectHeight (fromJust catTouchedPuddle))
+                                        "RainBoots"         -> rectY catrect + rectHeight catrect < rectY (fromJust catTouchedPuddle) + rectHeight (fromJust catTouchedPuddle)
+                                        "Skateboard"        -> rectY catrect + rectHeight catrect < rectY (fromJust catTouchedPuddle) + rectHeight (fromJust catTouchedPuddle)
                                         _                   -> True
-                              else False
 
-        catWetFromFireHydrant = if isJust catTouchedFireHydrant
-                                   then let fh = fromJust catTouchedFireHydrant
+        catWetFromFireHydrant = isJust catTouchedFireHydrant &&
+                                    let fh = fromJust catTouchedFireHydrant
                                             in if fireHydrantDisabled fh || catitemname == "Shield"
                                                   then False
                                                   else case fireHydrantDir fh of
                                                             DirLeft   -> if catitemname == "Poncho"
                                                                             then case catdirection of
                                                                                      DirLeft   -> False
-                                                                                     _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + (rectWidth (fireHydrantRect fh)) / 2.0
-                                                                            else rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + (rectWidth (fireHydrantRect fh)) / 2.0
+                                                                                     _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh) / 2.0
+                                                                            else rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh) / 2.0
                                                             DirRight  -> if catitemname == "Poncho"
                                                                             then case catdirection of
                                                                                       DirRight  -> False
-                                                                                      _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + (rectWidth (fireHydrantRect fh))
+                                                                                      _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh)
                                                                             else rectX catrect + rectWidth catrect > rectX (fireHydrantRect fh) + 100
-                                   else False
 
         catIsWet = catWetFromPuddle || catWetFromRain || catWetFromFireHydrant
 
         -- reached end marker?
-        catWin = if rectIntersect catrect (endMarkerRect $ endMarker mainpanel)
-                    then True
-                    else False
+        catWin = rectIntersect catrect (endMarkerRect $ endMarker mainpanel)
 
         -- update cat item effects
         preEffect = execState (do
@@ -427,7 +416,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
                                   return ()) noEffect
 
-        (effect, itemL) = foldr (\item (prevEff, prevList) -> if (rectIntersect (itemRect item) catrect && not ((itemName item) == "Cork" || (itemName item) == "Tarp"))
+        (effect, itemL) = foldr (\item (prevEff, prevList) -> if rectIntersect (itemRect item) catrect && (itemName item `notElem` ["Cork", "Tarp"])
                                                                  then (itemEffect item, prevList)
                                                                  else (prevEff, item:prevList))
                                 (preEffect, []) (itemList mainpanel)
@@ -456,13 +445,13 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
                               -- revert back to walking from spring boots
                               c <- get
-                              put (if ((catItemName c) == "SpringBoots") && catTouchingSurface && catVelY < 0
+                              put (if (catItemName c == "SpringBoots") && catTouchingSurface && catVelY < 0
                                       then walkEffect c
                                       else c)
 
                               -- revert back to walking from pogostick bounce
                               c <- get
-                              put (if (catItemName c == "Pogostick") && (abs catVelY) <= 1.0
+                              put (if (catItemName c == "Pogostick") && abs catVelY <= 1.0
                                       then walkEffect c
                                       else c)
 
@@ -513,7 +502,7 @@ catRectResponse (catX, catY) (catVelX, catVelY) catDir catrect@(Rect catRX catRY
                          ((x, y), d) <- get
                          put (if catVelY > 0.0
                                  then ((x, y - displaceDownY), d)
-                                 else if (abs displaceY) < (abs displaceX)
+                                 else if abs displaceY < abs displaceX
                                          then ((x, y + displaceY), d)
                                          else ((x, y), d))
 

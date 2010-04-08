@@ -13,7 +13,7 @@ import Settings.DisplaySettings as DisplaySettings
 
 -- gameMotion
 gameMotion :: IORef InputState.MousePos -> Position -> IO ()
-gameMotion mousePosRef (Position posX posY) = do
+gameMotion mousePosRef (Position posX posY) =
     writeIORef mousePosRef (InputState.MousePos (fromIntegral posX) (truncate DisplaySettings.screenResHeight - fromIntegral posY))
 
 -- gameInput
@@ -81,7 +81,7 @@ keyboardAct keysStateRef (Char '\ESC') Up = do
     writeIORef keysStateRef (keysState {escKeyDown = False})
 
 -- quit key
-keyboardAct keysStateRef (Char 'q') Down = do
+keyboardAct keysStateRef (Char 'q') Down =
     throwIO $ ExitException ExitSuccess
 
 -- left mouse button

@@ -21,6 +21,7 @@ import Level.EndMarker
 import Level.FireHydrant
 import Level.Level
 import Settings.DisplaySettings
+import Control.Monad (when)
 
 -- gameDraw
 gameDraw :: IORef WorldState -> IO ()
@@ -38,7 +39,7 @@ gameDraw worldStateRef = do
 
     Nxt.Graphics.worldTransform cameraX cameraY
     -- draw foreground
-    sequence_ $ map (\((x, y), tex) -> Nxt.Graphics.drawTexture (x) (y) tex (1.0::GLdouble)) (levelBackgrounds $ levelData $ curLevel worldState)
+    mapM_ (\((x, y), tex) -> Nxt.Graphics.drawTexture x y tex (1.0::GLdouble)) (levelBackgrounds $ levelData $ curLevel worldState)
 
     -- draw level end marker
     let endmarker = endMarker $ mainPanel worldState
@@ -47,7 +48,7 @@ gameDraw worldStateRef = do
 
     -- draw fire hydrants
     let firehydrants = fireHydrants $ mainPanel worldState
-    sequence_ $ map (\fh -> drawFireHydrant fh) firehydrants
+    mapM_ drawFireHydrant firehydrants
 
     -- draw cat
     let cat' = cat (mainPanel worldState)
@@ -100,9 +101,9 @@ drawItems worldState = do
         corklist = (corkList (mainPanel worldState))
         tarplist = (tarpList (mainPanel worldState))
 
-    sequence_ $ map (\item -> drawItem item) itemlist
-    sequence_ $ map (\cork -> drawItem cork) corklist
-    sequence_ $ map (\tarp -> drawItem tarp) tarplist
+    mapM_ drawItem itemlist
+    mapM_ drawItem corklist
+    mapM_ drawItem tarplist
 
     let (cameraX, cameraY) = cameraPos (mainPanel worldState)
     mousePos <- readIORef (mousePosRef worldState)
@@ -110,9 +111,8 @@ drawItems worldState = do
     let (mousex, mousey) = translateMousePos mousePos winW winH
 
     let placingItem' = placingItem $ mainPanel worldState
-    if isJust placingItem'
-        then drawItemAt (mousex - cameraX) (mousey - cameraY) (fromJust placingItem')
-        else return ()
+    (when (isJust placingItem') $
+        drawItemAt (mousex - cameraX) (mousey - cameraY) (fromJust placingItem'))
 
 -- drawPanels
 drawPanels :: WorldState -> IO ()
@@ -122,31 +122,31 @@ drawPanels worldState = do
 
     -- item panel: item buttons, item constraints
     let itemList = itemButtonList (itemPanel worldState)
-    sequence_ $ map drawItemBut (init itemList)
-    sequence_ $ map (\(ItemButton (x, y) _ _ _ count) -> Nxt.Graphics.drawString ((fromIntegral $ round (60.0 + x))::GLfloat)
-                                                                                 ((fromIntegral $ round y)::GLfloat)
-                                                                                 (show count) (Color4 0.0 0.0 0.0 1.0)) (init itemList)
+    mapM_ drawItemBut (init itemList)
+    mapM_ (\(ItemButton (x, y) _ _ _ count) -> Nxt.Graphics.drawString (fromIntegral (round (60.0 + x))::GLfloat)
+                                                                       (fromIntegral (round y)::GLfloat)
+                                                                       (show count) (Color4 0.0 0.0 0.0 1.0)) (init itemList)
 
     -- item panel: go/stop button
     drawGoStopButton (goStopButton $ itemPanel worldState)
 
     -- message panel: message
     let messagePanelStr = messageDisplay (messagePanel worldState)
-    if messagePanelStr /= ""
-       then sequence_ [Nxt.Graphics.drawRect UISettings.messagePanelRect UISettings.messagePanelColor,
-                       Nxt.Graphics.drawString 80.0 739.0 messagePanelStr (Color4 0.0 0.0 0.0 1.0)]
-       else return()
+    (when (messagePanelStr /= "") $
+      sequence_
+        [drawRect UISettings.messagePanelRect UISettings.messagePanelColor,
+         drawString 80.0 739.0 messagePanelStr (Color4 0.0 0.0 0.0 1.0)])
 
 -- drawDebug
 drawDebug :: WorldState -> IO ()
 drawDebug worldState = do
     -- raindrop count
     let rain = raindrops (mainPanel worldState)
-    Nxt.Graphics.drawString 10.0 720.0 ("Active raindrops: " ++ (show $ length rain)) (Color4 1.0 1.0 1.0 1.0)
+    Nxt.Graphics.drawString 10.0 720.0 ("Active raindrops: " ++ show (length rain)) (Color4 1.0 1.0 1.0 1.0)
 
     -- mouse cursor position
     mousePos <- readIORef (mousePosRef worldState)
     let mousex = mouseX mousePos
     let mousey = mouseY mousePos
-    Nxt.Graphics.drawString 10.0 740.0 ("Mouse Pos: (" ++ (show mousex) ++ ", " ++ (show mousey) ++ ")") (Color4 0.7 0.7 0.7 1.0)
+    Nxt.Graphics.drawString 10.0 740.0 ("Mouse Pos: (" ++ show mousex ++ ", " ++ show mousey ++ ")") (Color4 0.7 0.7 0.7 1.0)
 

@@ -61,13 +61,13 @@ data Cat = Cat
         catVelocity     :: Vector2d,
         catDirection    :: Direction,
         catTexture      :: [Nxt.Types.Texture],
-        catItemName     :: [Char],
+        catItemName     :: String,
         catItemDuration :: Maybe Int,
         catAnimations   :: CatAnimations
     }
 
 -- initCatAnimations
-initCatAnimations :: IO (CatAnimations)
+initCatAnimations :: IO CatAnimations
 initCatAnimations = do
     idleTex         <- cycleTextures (dataPath ++ "data/cat/cat-idle/cat-idle") 1 CatSettings.catWalkFrameTime
     hurtTex         <- cycleTextures (dataPath ++ "data/cat/cat-hurt/cat-hurt") 1 CatSettings.catWalkFrameTime
@@ -89,7 +89,7 @@ initCatAnimations = do
                           fallUmbrellaTex upsUmbrellaTex laserTex)
 
 -- initCat
-initCat :: Vector2d -> IO (Cat)
+initCat :: Vector2d -> IO Cat
 initCat initPos = do
     animations <- initCatAnimations
     let walkTex = walkTextures animations
@@ -102,7 +102,7 @@ drawCat :: Cat -> IO ()
 drawCat (Cat (540.0, 340.0) catVel catDir catTexture _ _ _) =
     Nxt.Graphics.drawTextureFlip 540.0 340.0 (head catTexture) (1.0::GLdouble) False
 drawCat (Cat (catPosX, catPosY) catVel catDir catTexture _ _ _) =
-    Nxt.Graphics.drawTextureFlip (catPosX - ((fromIntegral $ textureWidth (head catTexture)) / 2)) (catPosY) (head catTexture) (1.0::GLdouble) flip
+    Nxt.Graphics.drawTextureFlip (catPosX - (fromIntegral (textureWidth (head catTexture)) / 2)) catPosY (head catTexture) (1.0::GLdouble) flip
     where flip = case catDir of
                     DirLeft -> True
                     DirRight -> False

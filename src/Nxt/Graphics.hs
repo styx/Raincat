@@ -27,7 +27,7 @@ import Nxt.Types
 import Unsafe.Coerce
 
 -- initWindow
-initWindow :: Size -> [Char] -> IO ()
+initWindow :: Size -> String -> IO ()
 initWindow windowSize windowTitle = do
     getArgsAndInitialize
 
@@ -54,7 +54,7 @@ initGraphics screenResWidth screenResHeight = do
 
 -- begin
 begin :: IO ()
-begin = do
+begin =
     clear [ColorBuffer, DepthBuffer]
 
 -- end
@@ -72,7 +72,7 @@ fromGLdouble :: a -> Double
 fromGLdouble = unsafeCoerce
 
 -- loadTexture (only specified to load PNGs)
-loadTexture :: [Char] -> IO (Nxt.Types.Texture)
+loadTexture :: String -> IO Nxt.Types.Texture
 loadTexture textureFilePath = do
     surface <- SDLImage.loadTyped textureFilePath SDLImage.PNG
 
@@ -96,12 +96,12 @@ loadTexture textureFilePath = do
 
 -- freeTexture
 freeTexture :: Nxt.Types.Texture -> IO ()
-freeTexture tex = do
-    deleteObjectNames ([textureObject tex])
+freeTexture tex =
+    deleteObjectNames [textureObject tex]
 
 -- drawTexture
 drawTexture :: Double -> Double -> Nxt.Types.Texture -> GLdouble -> IO ()
-drawTexture x y tex alpha = do
+drawTexture x y tex alpha =
     drawTextureFlip x y tex alpha False
 
 -- drawTextureFlip
@@ -131,7 +131,7 @@ drawTextureFlip x y tex alpha flip = do
     texture Texture2D $= Disabled
 
 -- drawString (using Helvetica 12pt font)
-drawString :: GLfloat -> GLfloat -> [Char] -> Color4 GLfloat -> IO ()
+drawString :: GLfloat -> GLfloat -> String -> Color4 GLfloat -> IO ()
 drawString x y string col = do
     color col
     currentRasterPosition $= Vertex4 x y (0.0::GLfloat) (1.0::GLfloat)
@@ -150,8 +150,8 @@ drawRect (Rect rectX rectY rectWidth rectHeight) rectColor = do
                         Vertex3 rX (rY + rH) 0.0]
 
     renderPrimitive Quads $ do
-        mapM_ (\x -> color x) [rectColor]
-        mapM_ (\x -> vertex x) rectVertices
+        mapM_ color  [rectColor]
+        mapM_ vertex rectVertices
 
 -- drawPoly
 drawPoly :: Nxt.Types.Poly -> Color4 GLdouble -> IO ()
@@ -159,8 +159,8 @@ drawPoly (Poly sides points) polyColor = do
     let polyVerts = map (\(x,y) -> Vertex3 (toGLdouble x) (toGLdouble y) (0.0::GLdouble)) points
 
     renderPrimitive Polygon $ do
-        mapM_ (\x -> color x) [polyColor]
-        mapM_ (\x -> vertex x) polyVerts
+        mapM_ color [polyColor]
+        mapM_ vertex polyVerts
 
 -- worldTransform
 worldTransform :: Double -> Double -> IO ()
@@ -169,35 +169,35 @@ worldTransform worldX worldY = do
     translate (Vector3 (toGLdouble worldX) (toGLdouble worldY) 0.0)
 
 -- cycleTextures
-cycleTextures :: [Char] -> Int -> Int -> IO ([Nxt.Types.Texture])
+cycleTextures :: String -> Int -> Int -> IO [Nxt.Types.Texture]
 cycleTextures filePath frames frameTime = do
-    texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
-    let textures = cycle $ foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) [] texLists
+    texLists <- mapM (\n -> Nxt.Graphics.loadTexture (filePath ++ show n ++ ".png")) [1..frames]
+    let textures = cycle $ foldr ((++) . replicate frameTime) [] texLists
 
-    return (textures)
+    return textures
 
 -- cycleTextures2
-cycleTextures2 :: [Char] -> Int -> Int -> Int -> IO ([Nxt.Types.Texture])
+cycleTextures2 :: String -> Int -> Int -> Int -> IO [Nxt.Types.Texture]
 cycleTextures2 filePath frames lastFrame frameTime = do
-    texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
-    texLists2 <- Nxt.Graphics.loadTexture (filePath ++ (show lastFrame) ++ ".png");
-    let textures = foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) (repeat texLists2) texLists
+    texLists <- mapM (\n -> Nxt.Graphics.loadTexture (filePath ++ show n ++ ".png")) [1..frames]
+    texLists2 <- Nxt.Graphics.loadTexture (filePath ++ show lastFrame ++ ".png");
+    let textures = foldr ((++) . replicate frameTime) (repeat texLists2) texLists
 
-    return (textures)
+    return textures
 
 -- repeatTexturesN
-repeatTexturesN :: [Char] -> Int -> Int -> Int -> Int -> Int -> Int -> IO ([Nxt.Types.Texture])
+repeatTexturesN :: String -> Int -> Int -> Int -> Int -> Int -> Int -> IO [Nxt.Types.Texture]
 repeatTexturesN filePath frames startRepeat endRepeat nRepeats lastFrame frameTime = do
-    texLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [1..frames]
-    repeatTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [startRepeat..endRepeat]
-    endTexLists <- sequence $ map (\n -> Nxt.Graphics.loadTexture (filePath ++ (show n) ++ ".png")) [(endRepeat + 1)..lastFrame]
-    let textures = (take 60 (repeat $ last endTexLists))
+    texLists <- mapM (\n -> Nxt.Graphics.loadTexture (filePath ++ show n ++ ".png")) [1..frames]
+    repeatTexLists <- mapM (\n -> Nxt.Graphics.loadTexture (filePath ++ show n ++ ".png")) [startRepeat..endRepeat]
+    endTexLists <- mapM (\n -> Nxt.Graphics.loadTexture (filePath ++ show n ++ ".png")) [(endRepeat + 1)..lastFrame]
+    let textures = replicate 60 (last endTexLists)
                    ++
-                   (foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) [] texLists)
+                   foldr ((++) . replicate frameTime) [] texLists
                    ++
-                   (take (nRepeats * frameTime * (endRepeat - startRepeat)) $ cycle $ foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) [] repeatTexLists)
+                   take (nRepeats * frameTime * (endRepeat - startRepeat)) (cycle $ foldr ((++) . replicate frameTime) [] repeatTexLists)
                    ++
-                   (foldr (\tex texList -> (replicate frameTime tex) ++ (texList)) (repeat $ last endTexLists) endTexLists)
+                   foldr ((++) . replicate frameTime) (repeat $ last endTexLists) endTexLists
 
-    return (textures)
+    return textures
 

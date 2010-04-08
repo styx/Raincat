@@ -25,35 +25,35 @@ updateRain worldState = do
     let fallenRain = fallRain rain cameraY
 
     let spawnList = [(1.0 - cameraX)..(maxWorldX - cameraX)]
-    let xPos = [x::Double | x <- spawnList, (ceiling x) `mod` rainSpacing == 0]
+    let xPos = [x::Double | x <- spawnList, ceiling x `mod` rainSpacing == 0]
 
     gen <- newStdGen
 
     let lvlHeight = fromIntegral(levelHeight $ curLevel worldState)::Double
-    let yPos = randomRs (lvlHeight - rainHeight - cameraY, lvlHeight - cameraY) (gen)
+    let yPos = randomRs (lvlHeight - rainHeight - cameraY, lvlHeight - cameraY) gen
 
     let rainPositions = zip xPos yPos
 
-    newRainSeq <- sequence $ map createNewRain rainPositions
+    newRainSeq <- mapM createNewRain rainPositions
     let newRain = concat newRainSeq
 
     let totalRain = newRain ++ fallenRain
     let rainPolyCol = collideRainPoly totalRain (polySurfaces (mainPanel worldState))
-    let rectSurfaces' = map (\tarp -> (itemRect tarp)) (tarpList (mainPanel worldState))
+    let rectSurfaces' = map itemRect (tarpList (mainPanel worldState))
                         ++
-                        map (\cork -> (itemRect cork)) (corkList (mainPanel worldState))
+                        map itemRect (corkList (mainPanel worldState))
                         ++
-                        (rectSurfaces (mainPanel worldState))
+                        rectSurfaces (mainPanel worldState)
     let rainRectCol = collideRainRect rainPolyCol rectSurfaces'
 
     return rainRectCol
 
 -- createNewRain
-createNewRain :: Vector2d -> IO ([Vector2d])
+createNewRain :: Vector2d -> IO [Vector2d]
 createNewRain rainPos = do
     raindropDiceRoll <- getStdRandom $ randomR (0::Int, rainSpawnChance)
 
-    return (if raindropDiceRoll == 0 then [rainPos] else [])
+    return [rainPos | raindropDiceRoll == 0]
 
 -- fallRain
 fallRain :: [Vector2d] -> Double -> [Vector2d]
@@ -67,8 +67,8 @@ drawRain :: [Vector2d] -> IO ()
 drawRain [] = return ()
 drawRain ((raindropX, raindropY) : rain) = do
     renderPrimitive Quads $ do
-        mapM_ (\x -> color x) rainColor
-        mapM_ (\x -> vertex x) (raindropVertices raindropX raindropY)
+        mapM_ color rainColor
+        mapM_ vertex (raindropVertices raindropX raindropY)
     drawRain rain
 
 -- raindropVertices
@@ -94,11 +94,11 @@ rainPoly (raindropX, raindropY) =
 collideRainPoly :: [Vector2d] -> [Nxt.Types.Poly] -> [Vector2d]
 collideRainPoly [] rect = []
 collideRainPoly (raindrop:rain) polys =
-    if (foldr (\poly remove -> polyIntersect poly (rainPoly raindrop) || remove) False polys)
+    if foldr (\poly -> (polyIntersect poly (rainPoly raindrop) ||)) False polys
        then
        collideRainPoly rain polys
        else
-       raindrop:(collideRainPoly rain polys)
+       raindrop : collideRainPoly rain polys
 
 -- rainRect
 rainRect :: Vector2d -> Nxt.Types.Rect
@@ -109,9 +109,9 @@ rainRect (raindropX, raindropY) =
 collideRainRect :: [Vector2d] -> [Nxt.Types.Rect] -> [Vector2d]
 collideRainRect [] rect = []
 collideRainRect (raindrop:rain) rects =
-    if (foldr (\rect remove -> rectIntersect (rainRect raindrop) rect || remove) False rects)
+    if foldr ((||) . rectIntersect (rainRect raindrop)) False rects
        then
        collideRainRect rain rects
        else
-       raindrop:(collideRainRect rain rects)
+       raindrop : collideRainRect rain rects
 

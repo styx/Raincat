@@ -24,7 +24,7 @@ data FireHydrant = FireHydrant
     }
 
 -- initFireHydrant
-initFireHydrant :: Vector2d -> Direction -> IO (FireHydrant)
+initFireHydrant :: Vector2d -> Direction -> IO FireHydrant
 initFireHydrant (posX, posY) dir = do
     textures <- cycleTextures (dataPath ++ "data/level-misc/fire-hydrant-left") 8 WorldSettings.fireHydrantFrameTime
 
@@ -39,7 +39,7 @@ updateFireHydrant fireHydrant =
 
 -- drawFireHydrant
 drawFireHydrant :: FireHydrant -> IO ()
-drawFireHydrant (FireHydrant disa dir rect texList texDis) = do
+drawFireHydrant (FireHydrant disa dir rect texList texDis) =
     Nxt.Graphics.drawTextureFlip posX posY tex (1.0::GLdouble) flip
     where (posX, posY) = (rectX rect, rectY rect)
           tex = if disa then texDis else head texList

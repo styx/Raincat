@@ -4,6 +4,6 @@ module Panels.MessagePanel
 
 data MessagePanel = MessagePanel
     {
-        messageDisplay  :: [Char]
+        messageDisplay  :: String
     }
 

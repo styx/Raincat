@@ -24,7 +24,7 @@ main = do
     worldState <- gameInit
     worldStateRef <- newIORef worldState
 
-    displayCallback $= (programDraw worldStateRef)
+    displayCallback $= programDraw worldStateRef
 
     keyboardMouseCallback $= Just (gameInput (keysStateRef worldState))
     motionCallback $= Just (gameMotion (mousePosRef worldState))
@@ -35,6 +35,6 @@ main = do
     mainLoop
 
 exitMain :: IO ()
-exitMain = do
+exitMain =
     throwIO $ ExitException ExitSuccess
 

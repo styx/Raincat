@@ -15,7 +15,7 @@ initAudio :: IO ()
 initAudio = SDL.Mixer.openAudio 44100 SDL.Mixer.AudioS16Sys 2 4096
 
 -- loadMusic
-loadMusic :: [Char] -> IO (Music)
+loadMusic :: String -> IO Music
 loadMusic = SDL.Mixer.Music.loadMUS
 
 -- playMusic

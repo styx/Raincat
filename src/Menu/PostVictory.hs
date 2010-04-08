@@ -27,7 +27,7 @@ postVictoryMain worldStateRef mainCallback = do
     keys' <- readIORef (keysStateRef worldState)
     mousePos <- readIORef (mousePosRef worldState)
 
-    let mainpanel = mainPanel $ worldState
+    let mainpanel = mainPanel worldState
 
     let c = cat $ mainPanel worldState
         catLaser = if catPos c /= (540.0, 340.0)
@@ -36,7 +36,7 @@ postVictoryMain worldStateRef mainCallback = do
                       else c
         cat' = updateCatItemDuration $ updateCatAnim catLaser
 
-    let gameState' = if catPos cat' == (540.0, 340.0) && isJust (catItemDuration cat') && (fromJust $ catItemDuration cat') == 1
+    let gameState' = if catPos cat' == (540.0, 340.0) && isJust (catItemDuration cat') && fromJust (catItemDuration cat') == 1
                         then MainMenuState
                         else PostVictoryState
 
@@ -45,7 +45,7 @@ postVictoryMain worldStateRef mainCallback = do
     postRedisplay Nothing
     endTime <- getCurrentTime
 
-    let timeDiff = truncate (1000 * (diffUTCTime endTime startTime))
+    let timeDiff = truncate (1000 * diffUTCTime endTime startTime)
         timeSleep = if timeDiff < refreshMS then refreshMS - timeDiff else 0
 
     addTimerCallback timeSleep (mainCallback worldStateRef)

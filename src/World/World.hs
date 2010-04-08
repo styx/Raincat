@@ -42,7 +42,7 @@ data WorldState = WorldState
     }
 
 -- updateMessagePanel
-updateMessagePanel :: WorldState -> IO (MessagePanel)
+updateMessagePanel :: WorldState -> IO MessagePanel
 updateMessagePanel worldState = do
     mousePos <- readIORef (mousePosRef worldState)
     Glut.Size winW winH <- Glut.get Glut.windowSize
@@ -50,12 +50,12 @@ updateMessagePanel worldState = do
     let mousePos' = MousePos (floor mousex) (floor mousey)
     let itemList = itemButtonList (itemPanel worldState)
 
-    let messageDisplay' = foldr (\item str -> if mouseOverItemBut mousePos' item then (itemButDesc item) else str) "" itemList
+    let messageDisplay' = foldr (\item str -> if mouseOverItemBut mousePos' item then itemButDesc item else str) "" itemList
 
     return (MessagePanel messageDisplay')
 
 -- updateItem
-updateItem :: WorldState -> IO (Item)
+updateItem :: WorldState -> IO Item
 updateItem worldState = do
     mousePos <- readIORef (mousePosRef worldState)
     Glut.Size winW winH <- Glut.get Glut.windowSize
@@ -63,7 +63,7 @@ updateItem worldState = do
     let mousePos' = MousePos (floor mousex) (floor mousey)
     let itemList = itemButtonList (itemPanel worldState)
     let cItem = curItem (mainPanel worldState)
-    let newitem = foldr (\itemB r -> if mouseOverItemBut mousePos' itemB then (itemButItem itemB) else r) cItem itemList
+    let newitem = foldr (\itemB r -> if mouseOverItemBut mousePos' itemB then itemButItem itemB else r) cItem itemList
     return newitem
 
 -- updateItemCounts
@@ -71,10 +71,10 @@ updateItemCounts :: [ItemButton] -> [Int] -> [ItemButton]
 updateItemCounts itemBtnList itemCounts =
     map (\(itemBut, count) -> itemBut {itemButCount = count}) (zip (init itemBtnList) itemCounts)
     ++
-    [(last itemBtnList)]
+    [last itemBtnList]
 
 -- loadLevel
-loadLevel :: WorldState -> [Char] -> IO (WorldState)
+loadLevel :: WorldState -> String -> IO WorldState
 loadLevel worldState levelPath = do
     lvl <- openLevel levelPath
     let lvlData = levelData lvl
@@ -104,19 +104,19 @@ loadLevel worldState levelPath = do
     let curBGTex = backgroundTexture $ mainPanel worldState
         mainPanel' = MainPanel initCameraPos [] curBGTex cat' lvlRect lvlPoly lvlPuddles lvlFireHydrants levelend [] [] [] item Nothing m
         goStopBtn = goStopButton $ itemPanel worldState
-        itemPanel' = (itemPanel $ worldState) {itemButtonList = itemButtonList', goStopButton = goStopBtn {goStopState = GoState}}
+        itemPanel' = (itemPanel worldState) {itemButtonList = itemButtonList', goStopButton = goStopBtn {goStopState = GoState}}
 
     return (worldState {curLevel = lvl, mainPanel = mainPanel', itemPanel = itemPanel',
                         gameState = GameRunningState})
 
 -- loadLevelBackgrounds (NO TIME TO IMPLEMENT THIS IN FILE FORMAT PROPERLY!)
-loadLevelBackgrounds :: [Char] -> Level -> IO ([(Vector2d, Nxt.Types.Texture)])
+loadLevelBackgrounds :: String -> Level -> IO [(Vector2d, Nxt.Types.Texture)]
 loadLevelBackgrounds levelPath level = do
     let lvlData = levelData level
 
     -- this doesn't seem to actually do anything..
     -- free previous level's textures
-    --sequence_ $ map (\(_, oldBg) -> freeTexture oldBg) (levelBackgrounds lvlData)
+    -- mapM_ (\(_, oldBg) -> freeTexture oldBg) (levelBackgrounds lvlData)
 
     let lvlPos = case (drop (length dataPath) levelPath) of
                     "data/levels/water1/water1.lvl"          -> [(0.0, 0.0), (1024.0, 0.0)]

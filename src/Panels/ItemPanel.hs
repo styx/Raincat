@@ -30,7 +30,7 @@ data GoStopButton = GoStopButton
     }
 
 -- initGoStopButton
-initGoStopButton :: IO (GoStopButton)
+initGoStopButton :: IO GoStopButton
 initGoStopButton = do
     goTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/cat-go-button.png")
     stopTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/cat-stop-button.png")
