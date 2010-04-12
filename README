@@ -18,11 +18,12 @@ Version 1.1:
 Version 1.0:
     - Initial version
 
+
 NOTES:
 ------
-The Raincat executable was compiled with GHC 6.12.1 on Arch Linux i686.
-If you are having problems running the game, the win32 build runs under
-wine.
+The Raincat executable was compiled with GHC 6.12.1 on Arch Linux i686
+and on Ubuntu 9.10. If you are having problems running the game, the
+win32 build runs under wine.
 
 Runtimes for the following libraries are assumed to be installed:
 GLUT
@@ -54,3 +55,7 @@ Rachel Berkowitz    - Music Composer
 Spencer Ying        - Artist/Level Designer
 Tal Stramer         - Level Editor Programmer
 
+
+OTHER CONTRIBUTORS:
+-------------------
+Mikhail Poblovets   - Programmer
