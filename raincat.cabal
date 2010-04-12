@@ -1,0 +1,58 @@
+name:                   Raincat
+version:                1.1
+cabal-version:          >= 1.8
+build-type:             Simple
+license:                BSD3
+license-file:           LICENSE
+copyright:              Garrick Chin 2008-2010
+maintainer:             Mikhail S. Pobolovets <styx.mp@gmail.com>
+homepage:               http://raincat.bysusanlin.com/
+package-url:            git://github.com/styx/Raincat.git
+bug-reports:            http://github.com/styx/Raincat/issues
+synopsis:               A puzzle game written in Haskell with a cat in lead role
+description:            Project Raincat is a game developed by Carnegie Mellon students
+                        through GCS during the Fall 2008 semester. Raincat features game
+                        play inspired from classics Lemmings and The Incredible Machine.
+                        The project proved to be an excellent learning experience for
+                        the programmers. Everything is programmed in Haskell.
+
+category:               Game
+author:                 Garrick Chin, Susan Lin, SooHyun Jang, Anthony Maurice, William Wang,
+                        Andrew Zheng, Rachel Berkowitz, Spencer Ying, Tal Stramer
+
+stability:              stable
+tested-with:            GHC==6.12.1
+data-files:             LICENSE README
+                        data/effects/*.png data/cat/cat-walk/*.png data/cat/cat-idle/*.png
+                        data/music/*.mp3 data/levels/skyline/*.lvl data/levels/movement1/*.lvl
+                        data/cat/cat-springboots/*.png data/levels/movement2/*.lvl data/levels/pinball/*.lvl
+                        data/item-buttons/*.png data/backgrounds/*.png data/levels/rift/*.png
+                        data/levels/water1/*.png data/levels/river/*.lvl data/cat/cat-skateboard/*.png
+                        data/cat/cat-laser/*.png data/cat/cat-pogostick/*.png data/levels/water2/*.png
+                        data/cat/cat-hurt/*.png data/levels/rift/*.lvl data/levels/water1/*.lvl
+                        data/levels/pool/*.png data/level-misc/*.png data/cat/cat-speedboots/*.png
+                        data/cat/cat-rainboots/*.png data/levels/water2/*.lvl data/levels/skyline/*.png
+                        data/levels/movement1/*.png data/cat/cat-poncho/*.png data/cat/cat-umbrella/*.png
+                        data/levels/movement2/*.png data/levels/pinball/*.png data/menu/*.png
+                        data/cat/cat-upside-down-umbrella/*.png data/cat/cat-shield/*.png
+                        data/levels/river/*.png data/levels/pool/*.lvl data/items/*.png
+
+data-dir:               ""
+extra-source-files:     Setup.lhs
+
+executable              raincat
+    main-is:            Main.hs
+    buildable:          True
+    ghc-options:        -Wall
+    hs-source-dirs:     src
+    build-depends:
+                        base >= 4.2 && < 5,
+                        containers,
+                        mtl,
+                        random,
+                        time,
+                        GLUT,
+                        OpenGL,
+                        SDL,
+                        SDL-image,
+                        SDL-mixer

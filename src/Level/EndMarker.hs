@@ -16,7 +16,8 @@ data EndMarker = EndMarker
 
 initEndMarker :: Vector2d -> IO EndMarker
 initEndMarker (posX, posY) = do
-    markerTex <- loadTexture (dataPath ++ "data/level-misc/level-end-marker.png")
+    dataPath  <- getDataDir
+    markerTex <- loadTexture (dataPath ++ "/data/level-misc/level-end-marker.png")
 
     let markerRect = Nxt.Types.Rect posX posY
                                    (fromIntegral $ textureWidth markerTex :: Double)

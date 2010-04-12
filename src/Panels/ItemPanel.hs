@@ -32,8 +32,9 @@ data GoStopButton = GoStopButton
 -- initGoStopButton
 initGoStopButton :: IO GoStopButton
 initGoStopButton = do
-    goTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/cat-go-button.png")
-    stopTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/cat-stop-button.png")
+    dataPath <- getDataDir
+    goTex    <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/cat-go-button.png")
+    stopTex  <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/cat-stop-button.png")
 
     let rect = Nxt.Types.Rect 870.0 0.0 128.0 90.0
 

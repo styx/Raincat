@@ -112,6 +112,7 @@ loadLevel worldState levelPath = do
 -- loadLevelBackgrounds (NO TIME TO IMPLEMENT THIS IN FILE FORMAT PROPERLY!)
 loadLevelBackgrounds :: String -> Level -> IO [(Vector2d, Nxt.Types.Texture)]
 loadLevelBackgrounds levelPath level = do
+    dataPath <- getDataDir
     let lvlData = levelData level
 
     -- this doesn't seem to actually do anything..
@@ -119,43 +120,43 @@ loadLevelBackgrounds levelPath level = do
     -- mapM_ (\(_, oldBg) -> freeTexture oldBg) (levelBackgrounds lvlData)
 
     let lvlPos = case (drop (length dataPath) levelPath) of
-                    "data/levels/water1/water1.lvl"          -> [(0.0, 0.0), (1024.0, 0.0)]
-                    "data/levels/movement1/movement1.lvl"    -> [(-15.0, -265.0), (1009.0, -265.0), (2033, -265.0)]
-                    "data/levels/water2/water2.lvl"          -> [(0.0, -200.0), (1024.0, -200.0)]
-                    "data/levels/movement2/movement2.lvl"    -> [(5.0, -70.0), (1029.0, -70.0)]
-                    "data/levels/pool/pool.lvl"              -> [(53.0, -295.0), (1077.0, -295.0)]
-                    "data/levels/rift/rift.lvl"              -> [(10.0, -545.0), (1034.0, -545.0), (10.0, 479.0), (1034.0, 479.0)]
-                    "data/levels/skyline/skyline.lvl"        -> [(-40.0, -685.0), (984.0, -685.0), (2008.0, -685.0),
+                    "/data/levels/water1/water1.lvl"         -> [(0.0, 0.0), (1024.0, 0.0)]
+                    "/data/levels/movement1/movement1.lvl"   -> [(-15.0, -265.0), (1009.0, -265.0), (2033, -265.0)]
+                    "/data/levels/water2/water2.lvl"         -> [(0.0, -200.0), (1024.0, -200.0)]
+                    "/data/levels/movement2/movement2.lvl"   -> [(5.0, -70.0), (1029.0, -70.0)]
+                    "/data/levels/pool/pool.lvl"             -> [(53.0, -295.0), (1077.0, -295.0)]
+                    "/data/levels/rift/rift.lvl"             -> [(10.0, -545.0), (1034.0, -545.0), (10.0, 479.0), (1034.0, 479.0)]
+                    "/data/levels/skyline/skyline.lvl"       -> [(-40.0, -685.0), (984.0, -685.0), (2008.0, -685.0),
                                                                     (-40.0, 339.0), (984.0, 339.0), (2008.0, 339.0)]
-                    "data/levels/river/river.lvl"            -> [(10.0, -315.0), (1034.0, -315.0), (2058.0, -315.0)]
-                    "data/levels/pinball/pinball.lvl"        -> [(110.0, -330.0), (1134.0, -330.0)]
+                    "/data/levels/river/river.lvl"           -> [(10.0, -315.0), (1034.0, -315.0), (2058.0, -315.0)]
+                    "/data/levels/pinball/pinball.lvl"       -> [(110.0, -330.0), (1134.0, -330.0)]
     lvlBgs <- case (drop (length dataPath) levelPath) of
-                 "data/levels/water1/water1.lvl"         -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/water1/water1_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/water1/water1_1_0.png")]
-                 "data/levels/movement1/movement1.lvl"   -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/movement1/movement1_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/movement1/movement1_1_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/movement1/movement1_2_0.png")]
-                 "data/levels/water2/water2.lvl"         -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/water2/water2_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/water2/water2_1_0.png")]
-                 "data/levels/movement2/movement2.lvl"   -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/movement2/movement2_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/movement2/movement2_1_0.png")]
-                 "data/levels/pool/pool.lvl"             -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/pool/pool_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/pool/pool_1_0.png")]
-                 "data/levels/rift/rift.lvl"             -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/rift/rift_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/rift/rift_1_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/rift/rift_0_1.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/rift/rift_1_1.png")]
-                 "data/levels/skyline/skyline.lvl"       -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_1_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_2_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_0_1.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_1_1.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/skyline/skyline_2_1.png")]
-                 "data/levels/river/river.lvl"           -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/river/river_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/river/river_1_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/river/river_2_0.png")]
-                 "data/levels/pinball/pinball.lvl"       -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "data/levels/pinball/pinball_0_0.png"),
-                                                                         Nxt.Graphics.loadTexture (dataPath ++ "data/levels/pinball/pinball_1_0.png")]
+                 "/data/levels/water1/water1.lvl"        -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_1_0.png")]
+                 "/data/levels/movement1/movement1.lvl"  -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement1/movement1_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement1/movement1_1_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement1/movement1_2_0.png")]
+                 "/data/levels/water2/water2.lvl"        -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water2/water2_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water2/water2_1_0.png")]
+                 "/data/levels/movement2/movement2.lvl"  -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement2/movement2_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement2/movement2_1_0.png")]
+                 "/data/levels/pool/pool.lvl"            -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pool/pool_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pool/pool_1_0.png")]
+                 "/data/levels/rift/rift.lvl"            -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/rift/rift_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/rift/rift_1_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/rift/rift_0_1.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/rift/rift_1_1.png")]
+                 "/data/levels/skyline/skyline.lvl"      -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_1_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_2_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_0_1.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_1_1.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/skyline/skyline_2_1.png")]
+                 "/data/levels/river/river.lvl"          -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/river/river_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/river/river_1_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/river/river_2_0.png")]
+                 "/data/levels/pinball/pinball.lvl"      -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pinball/pinball_0_0.png"),
+                                                                         Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pinball/pinball_1_0.png")]
 
     return (zip lvlPos lvlBgs)
 

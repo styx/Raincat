@@ -26,7 +26,8 @@ data FireHydrant = FireHydrant
 -- initFireHydrant
 initFireHydrant :: Vector2d -> Direction -> IO FireHydrant
 initFireHydrant (posX, posY) dir = do
-    textures <- cycleTextures (dataPath ++ "data/level-misc/fire-hydrant-left") 8 WorldSettings.fireHydrantFrameTime
+    dataPath <- getDataDir
+    textures <- cycleTextures (dataPath ++ "/data/level-misc/fire-hydrant-left") 8 WorldSettings.fireHydrantFrameTime
 
     let rect = Nxt.Types.Rect posX posY (fromIntegral $ textureWidth $ head textures) (fromIntegral $ textureHeight $ head textures)
 

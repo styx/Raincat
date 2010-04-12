@@ -69,20 +69,21 @@ data Cat = Cat
 -- initCatAnimations
 initCatAnimations :: IO CatAnimations
 initCatAnimations = do
-    idleTex         <- cycleTextures (dataPath ++ "data/cat/cat-idle/cat-idle") 1 CatSettings.catWalkFrameTime
-    hurtTex         <- cycleTextures (dataPath ++ "data/cat/cat-hurt/cat-hurt") 1 CatSettings.catWalkFrameTime
-    walkTex         <- cycleTextures (dataPath ++ "data/cat/cat-walk/cat-walk") 10 CatSettings.catWalkFrameTime
-    springBootsTex  <- cycleTextures2 (dataPath ++ "data/cat/cat-springboots/cat-springboots") 3 4 CatSettings.catSpringFrameTime
-    speedBootsTex   <- cycleTextures (dataPath ++ "data/cat/cat-speedboots/cat-speedboots") 10 CatSettings.catSpeedFrameTime
-    rainBootsTex    <- cycleTextures (dataPath ++ "data/cat/cat-rainboots/cat-rainboots") 10 CatSettings.catRainFrameTime
-    ponchoTex       <- cycleTextures (dataPath ++ "data/cat/cat-poncho/cat-poncho") 10 CatSettings.catPonchoFrameTime
-    shieldTex       <- cycleTextures (dataPath ++ "data/cat/cat-shield/cat-shield") 10 CatSettings.catShieldFrameTime
-    umbrellaTex     <- cycleTextures (dataPath ++ "data/cat/cat-umbrella/cat-umbrella") 10 CatSettings.catUmbrellaFrameTime
-    skateboardTex   <- cycleTextures (dataPath ++ "data/cat/cat-skateboard/cat-skateboard") 4 CatSettings.catSkateFrameTime
-    pogostickTex    <- cycleTextures2 (dataPath ++ "data/cat/cat-pogostick/cat-pogostick") 2 3 CatSettings.catPogoFrameTime
-    fallUmbrellaTex <- cycleTextures (dataPath ++ "data/cat/cat-umbrella/cat-fall-umbrella") 1 CatSettings.catFallUmbrellaFrameTime
-    upsUmbrellaTex  <- cycleTextures (dataPath ++ "data/cat/cat-upside-down-umbrella/cat-upside-down-umbrella") 1 CatSettings.catFallUmbrellaFrameTime
-    laserTex        <- repeatTexturesN (dataPath ++ "data/cat/cat-laser/cat-laser") 29 30 38 5 41 3
+    dataPath        <- getDataDir
+    idleTex         <- cycleTextures   (dataPath ++ "/data/cat/cat-idle/cat-idle") 1 CatSettings.catWalkFrameTime
+    hurtTex         <- cycleTextures   (dataPath ++ "/data/cat/cat-hurt/cat-hurt") 1 CatSettings.catWalkFrameTime
+    walkTex         <- cycleTextures   (dataPath ++ "/data/cat/cat-walk/cat-walk") 10 CatSettings.catWalkFrameTime
+    springBootsTex  <- cycleTextures2  (dataPath ++ "/data/cat/cat-springboots/cat-springboots") 3 4 CatSettings.catSpringFrameTime
+    speedBootsTex   <- cycleTextures   (dataPath ++ "/data/cat/cat-speedboots/cat-speedboots") 10 CatSettings.catSpeedFrameTime
+    rainBootsTex    <- cycleTextures   (dataPath ++ "/data/cat/cat-rainboots/cat-rainboots") 10 CatSettings.catRainFrameTime
+    ponchoTex       <- cycleTextures   (dataPath ++ "/data/cat/cat-poncho/cat-poncho") 10 CatSettings.catPonchoFrameTime
+    shieldTex       <- cycleTextures   (dataPath ++ "/data/cat/cat-shield/cat-shield") 10 CatSettings.catShieldFrameTime
+    umbrellaTex     <- cycleTextures   (dataPath ++ "/data/cat/cat-umbrella/cat-umbrella") 10 CatSettings.catUmbrellaFrameTime
+    skateboardTex   <- cycleTextures   (dataPath ++ "/data/cat/cat-skateboard/cat-skateboard") 4 CatSettings.catSkateFrameTime
+    pogostickTex    <- cycleTextures2  (dataPath ++ "/data/cat/cat-pogostick/cat-pogostick") 2 3 CatSettings.catPogoFrameTime
+    fallUmbrellaTex <- cycleTextures   (dataPath ++ "/data/cat/cat-umbrella/cat-fall-umbrella") 1 CatSettings.catFallUmbrellaFrameTime
+    upsUmbrellaTex  <- cycleTextures   (dataPath ++ "/data/cat/cat-upside-down-umbrella/cat-upside-down-umbrella") 1 CatSettings.catFallUmbrellaFrameTime
+    laserTex        <- repeatTexturesN (dataPath ++ "/data/cat/cat-laser/cat-laser") 29 30 38 5 41 3
 
     return (CatAnimations idleTex hurtTex walkTex springBootsTex speedBootsTex rainBootsTex
                           ponchoTex shieldTex umbrellaTex skateboardTex pogostickTex

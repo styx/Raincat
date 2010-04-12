@@ -1,6 +1,10 @@
 module Settings.Path
-    (dataPath) where
+    (getDataDir) where
 
-dataPath :: String
-dataPath = "./"
+import Paths_Raincat(getDataDir)
+
+--dataPath :: IO FilePath
+--dataPath = getDataDir
+
+
 

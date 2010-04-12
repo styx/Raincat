@@ -26,14 +26,15 @@ import Settings.Path
 -- gameInit
 gameInit :: IO WorldState
 gameInit = do
-    keys <- newIORef (InputState.KeysState False False False False False False False False False)
+    dataPath <- getDataDir
+    keys     <- newIORef (InputState.KeysState False False False False False False False False False)
     mousePos <- newIORef (InputState.MousePos 0 0)
 
     initAudio
-    m <- loadMusic (dataPath ++ "data/music/project_raincat.mp3")
+    m <- loadMusic (dataPath ++ "/data/music/project_raincat.mp3")
     playMusic m
 
-    lvl <- openLevel (dataPath ++ "data/levels/pinball/pinball.lvl")
+    lvl <- openLevel (dataPath ++ "/data/levels/pinball/pinball.lvl")
     let lvlData = levelData lvl
         lvlRect = levelRects lvlData
         lvlPoly = levelPolys lvlData
@@ -50,7 +51,7 @@ gameInit = do
 
     -- main panel
     let initCameraPos = (0, 0)
-    backgroundTexObj <- Nxt.Graphics.loadTexture (dataPath ++ "data/backgrounds/clouds_background.png")
+    backgroundTexObj <- Nxt.Graphics.loadTexture (dataPath ++ "/data/backgrounds/clouds_background.png")
     cat <- initCat catStart
 
     -- item panel
@@ -64,31 +65,32 @@ gameInit = do
     let messagePanel = MessagePanel "I am the message panel! Hover the cursor over the items on the panel at right to see their description!"
 
     -- menu textures
-    menuTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/menu/level-select.png")
-    howtoTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/menu/how-to.png")
+    menuTex <- Nxt.Graphics.loadTexture (dataPath ++ "/data/menu/level-select.png")
+    howtoTex <- Nxt.Graphics.loadTexture (dataPath ++ "/data/menu/how-to.png")
 
     return (WorldState MainMenuState keys mousePos lvl mainPanel itemPanel messagePanel (menuTex, howtoTex))
 
 -- initItemPanel
 initItemPanel :: IO ItemPanel
 initItemPanel = do
-    umbrellaTex             <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-umbrella.png")
-    upsidedownUmbrellaTex   <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-upsidedown-umbrella.png")
-    ponchoTex               <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-poncho.png")
-    hairdryerTex            <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-hairdryer.png")
-    springbootsTex          <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-springboots.png")
-    skateboardTex           <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-skateboard.png")
-    wrenchTex               <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-wrench.png")
-    corkTex                 <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-cork.png")
-    pogostickTex            <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-pogostick.png")
-    speedbootsTex           <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-speedboots.png")
-    tarpTex                 <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-tarp.png")
-    shieldTex               <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-happy-shield.png")
-    rainbootsTex            <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-rainboots.png")
-    eraserTex               <- Nxt.Graphics.loadTexture (dataPath ++ "data/item-buttons/item-eraser.png")
+    dataPath                <- getDataDir
+    umbrellaTex             <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-umbrella.png")
+    upsidedownUmbrellaTex   <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-upsidedown-umbrella.png")
+    ponchoTex               <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-poncho.png")
+    hairdryerTex            <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-hairdryer.png")
+    springbootsTex          <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-springboots.png")
+    skateboardTex           <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-skateboard.png")
+    wrenchTex               <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-wrench.png")
+    corkTex                 <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-cork.png")
+    pogostickTex            <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-pogostick.png")
+    speedbootsTex           <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-speedboots.png")
+    tarpTex                 <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-tarp.png")
+    shieldTex               <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-happy-shield.png")
+    rainbootsTex            <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-rainboots.png")
+    eraserTex               <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/item-eraser.png")
 
-    corkItemTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/items/cork.png")
-    tarpItemTex <- Nxt.Graphics.loadTexture (dataPath ++ "data/items/tarp.png")
+    corkItemTex <- Nxt.Graphics.loadTexture (dataPath ++ "/data/items/cork.png")
+    tarpItemTex <- Nxt.Graphics.loadTexture (dataPath ++ "/data/items/tarp.png")
 
     let umbrellaItem            = Item (0, 0) umbrellaTex umbrellaEffect "Umbrella"
         upsidedownUmbrellaItem  = Item (0, 0) upsidedownUmbrellaTex upsUmbrellaEffect "Inverted Umbrella"
