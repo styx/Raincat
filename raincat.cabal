@@ -1,5 +1,5 @@
 name:                   Raincat
-version:                1.1
+version:                1.1.1
 cabal-version:          >= 1.8
 build-type:             Simple
 license:                BSD3
@@ -18,7 +18,7 @@ description:            Project Raincat is a game developed by Carnegie Mellon s
 
 category:               Game
 author:                 Garrick Chin, Susan Lin, SooHyun Jang, Anthony Maurice, William Wang,
-                        Andrew Zheng, Rachel Berkowitz, Spencer Ying, Tal Stramer
+                        Andrew Zheng, Rachel Berkowitz, Spencer Ying, Tal Stramer, Mikhail Pobolovets
 
 stability:              stable
 tested-with:            GHC==6.12.1
