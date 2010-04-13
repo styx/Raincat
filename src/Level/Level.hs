@@ -17,7 +17,7 @@ module Level.Level
 
 import Nxt.Types
 import System.IO
-import Control.Exception
+import qualified Error.Error as E
 import Settings.DisplaySettings
 import Nxt.Graphics hiding (end)
 import Control.Arrow (second)
@@ -107,20 +107,20 @@ parseShape numShapes inh (leveldata@(LevelData _ _ fireHydrantsL fireHydrantsR p
                                  "firehydrantRight" -> leveldata {levelFireHydrantsR = parseRect coord : fireHydrantsR}
                                  "puddle"           -> leveldata {levelPuddles = parseRect coord : puddles}
                                  "polygon"          -> leveldata {levelPolys = poly : polys}
-                                 _                  -> throw (PatternMatchFail "Invalid level data")
+                                 _                  -> E.throwEx (E.BadLevelData obj)
             parseShape (numShapes-1) inh newLevelData
 
 -- parseVerts
 parseVerts :: [Double] -> [Vector2d]
 parseVerts [] = []
-parseVerts (_x:[]) = throw (PatternMatchFail "Odd number of Coords")
+parseVerts (_x:[]) = E.throwEx E.BadVerticesData
 parseVerts (x:y:vs) = (x,y):parseVerts vs
 
 -- parseRect
 parseRect :: [Double] -> Rect
 parseRect coords =
     if length coords /= 8
-    then throw (PatternMatchFail "Incorrect number of Coords")
+    then E.throwEx E.BadRectData
     else Rect bottomLX bottomLY width height
         where bottomLX = head coords
               bottomLY = coords !! 1

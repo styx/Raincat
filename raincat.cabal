@@ -46,8 +46,9 @@ executable              raincat
     ghc-options:        -Wall
     hs-source-dirs:     src
     build-depends:
-                        base >= 4.2 && < 5,
+                        base >= 3 && < 5,
                         containers,
+                        extensible-exceptions,
                         mtl,
                         random,
                         time,
@@ -56,3 +57,5 @@ executable              raincat
                         SDL,
                         SDL-image,
                         SDL-mixer
+
+    -- TODO other-modules:
