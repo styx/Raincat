@@ -17,11 +17,10 @@ module Items.Items
      drawItemBut,
      mouseOverItemBut) where
 
-import Data.Maybe
 import Graphics.Rendering.OpenGL as GL
 import Nxt.Graphics
 import Nxt.Types
-import Input.InputState
+import Input.InputState hiding (mouseX, mouseY)
 import Cat.Cat
 
 data Item = Item
@@ -67,13 +66,13 @@ drawItem (Item (itemX, itemY) itemTex _ _) =
 
 -- drawItemBut
 drawItemBut :: ItemButton -> IO ()
-drawItemBut (ItemButton (itemPosX, itemPosY) itemTexture _ _ _) =
-    Nxt.Graphics.drawTexture itemPosX itemPosY itemTexture (1.0::GLdouble)
+drawItemBut (ItemButton (itemPosX, itemPosY) itemTex _ _ _) =
+    Nxt.Graphics.drawTexture itemPosX itemPosY itemTex (1.0::GLdouble)
 
 -- mouseOverItemBut
 mouseOverItemBut :: MousePos -> ItemButton -> Bool
-mouseOverItemBut (MousePos mouseX mouseY) (ItemButton (itemX, itemY) itemTexture _ _ _) =
-    pointInRect (fromIntegral mouseX, fromIntegral mouseY) itemRect
+mouseOverItemBut (MousePos mouseX mouseY) (ItemButton (itemX, itemY) itemTex _ _ _) =
+    pointInRect (fromIntegral mouseX, fromIntegral mouseY) itemRectBut
     where
-        itemRect = Nxt.Types.Rect itemX itemY (fromIntegral $ textureWidth itemTexture) (fromIntegral $ textureHeight itemTexture)
+        itemRectBut = Nxt.Types.Rect itemX itemY (fromIntegral $ textureWidth itemTex) (fromIntegral $ textureHeight itemTex)
 

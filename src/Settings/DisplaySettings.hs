@@ -5,7 +5,6 @@ module Settings.DisplaySettings
      refreshMS) where
 
 import Graphics.UI.GLUT
-import Graphics.Rendering.OpenGL
 
 screenRes :: Size
 screenRes = Size (truncate screenResWidth) (truncate screenResHeight)

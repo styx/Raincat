@@ -16,7 +16,6 @@ module Panels.MainPanel
      fireHydrants,
      endMarker) where
 
-import Graphics.Rendering.OpenGL hiding (Rect)
 import Nxt.Types
 import Nxt.Audio
 import Cat.Cat

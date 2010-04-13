@@ -13,7 +13,6 @@ import Items.Items
 import Level.Level
 import Settings.RainSettings as RainSettings
 import Settings.WorldSettings as WorldSettings
-import Settings.DisplaySettings as DisplaySettings
 import Nxt.Graphics
 
 -- updateRain
@@ -92,7 +91,7 @@ rainPoly (raindropX, raindropY) =
 
 -- collideRainPoly
 collideRainPoly :: [Vector2d] -> [Nxt.Types.Poly] -> [Vector2d]
-collideRainPoly [] rect = []
+collideRainPoly [] _ = []
 collideRainPoly (raindrop:rain) polys =
     if foldr (\poly -> (polyIntersect poly (rainPoly raindrop) ||)) False polys
        then
@@ -107,7 +106,7 @@ rainRect (raindropX, raindropY) =
 
 -- collideRainRect
 collideRainRect :: [Vector2d] -> [Nxt.Types.Rect] -> [Vector2d]
-collideRainRect [] rect = []
+collideRainRect [] _ = []
 collideRainRect (raindrop:rain) rects =
     if foldr ((||) . rectIntersect (rainRect raindrop)) False rects
        then

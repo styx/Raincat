@@ -18,23 +18,23 @@ module Nxt.Graphics
      repeatTexturesN) where
 
 import Control.Monad
-import Graphics.UI.GLUT as GLUT
+import Graphics.UI.GLUT as GLUT hiding (windowSize, windowTitle)
 import Graphics.Rendering.OpenGL as GL
 import Graphics.UI.SDL.Image as SDLImage
 import Graphics.UI.SDL.Types
 import Graphics.UI.SDL.Video
-import Nxt.Types
+import Nxt.Types hiding (rectX, rectY, rectWidth, rectHeight)
 import Unsafe.Coerce
 
 -- initWindow
 initWindow :: Size -> String -> IO ()
 initWindow windowSize windowTitle = do
-    getArgsAndInitialize
+    _ <- getArgsAndInitialize
 
     initialWindowSize $= windowSize
     initialDisplayMode $= [DoubleBuffered]
 
-    createWindow windowTitle
+    _ <- createWindow windowTitle
 
     return ()
 
@@ -106,7 +106,7 @@ drawTexture x y tex alpha =
 
 -- drawTextureFlip
 drawTextureFlip :: Double -> Double -> Nxt.Types.Texture -> GLdouble -> Bool -> IO ()
-drawTextureFlip x y tex alpha flip = do
+drawTextureFlip x y tex alpha fliped = do
     texture Texture2D $= Enabled
     textureBinding Texture2D $= Just (textureObject tex)
 
@@ -118,7 +118,7 @@ drawTextureFlip x y tex alpha flip = do
         color4f = color :: Color4 GLdouble -> IO ()
         col = color4f (Color4 (1.0::GLdouble) (1.0::GLdouble) (1.0::GLdouble) alpha)
 
-    let texCoordX = if flip then (-1) else 1
+    let texCoordX = if fliped then (-1) else 1
         x' = toGLdouble x
         y' = toGLdouble y
 
@@ -155,7 +155,7 @@ drawRect (Rect rectX rectY rectWidth rectHeight) rectColor = do
 
 -- drawPoly
 drawPoly :: Nxt.Types.Poly -> Color4 GLdouble -> IO ()
-drawPoly (Poly sides points) polyColor = do
+drawPoly (Poly _ points) polyColor = do
     let polyVerts = map (\(x,y) -> Vertex3 (toGLdouble x) (toGLdouble y) (0.0::GLdouble)) points
 
     renderPrimitive Polygon $ do

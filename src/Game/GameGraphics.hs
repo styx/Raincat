@@ -3,24 +3,21 @@ module Game.GameGraphics
 
 import Data.Maybe
 import Graphics.UI.GLUT as Glut
-import Graphics.Rendering.OpenGL
 import Data.IORef
 import World.World
 import Nxt.Graphics
 import Nxt.Types
 import Rain.Rain
-import Settings.WorldSettings as WorldSettings
 import Settings.UISettings as UISettings
 import Input.InputState as InputState
 import Items.Items
-import Panels.MainPanel
+import qualified Panels.MainPanel as MainPanel
 import Panels.ItemPanel
 import Panels.MessagePanel
 import Cat.Cat
 import Level.EndMarker
 import Level.FireHydrant
 import Level.Level
-import Settings.DisplaySettings
 import Control.Monad (when)
 
 -- gameDraw
@@ -30,34 +27,34 @@ gameDraw worldStateRef = do
 
     Nxt.Graphics.begin
 
-    let (cameraX, cameraY) = cameraPos (mainPanel worldState)
+    let (cameraX, cameraY) = MainPanel.cameraPos (mainPanel worldState)
 
     Nxt.Graphics.worldTransform 0.0 0.0
 
     -- draw background
-    Nxt.Graphics.drawTexture 0.0 0.0 (backgroundTexture (mainPanel worldState)) (1.0::GLdouble)
+    Nxt.Graphics.drawTexture 0.0 0.0 (MainPanel.backgroundTexture (mainPanel worldState)) (1.0::GLdouble)
 
     Nxt.Graphics.worldTransform cameraX cameraY
     -- draw foreground
     mapM_ (\((x, y), tex) -> Nxt.Graphics.drawTexture x y tex (1.0::GLdouble)) (levelBackgrounds $ levelData $ curLevel worldState)
 
     -- draw level end marker
-    let endmarker = endMarker $ mainPanel worldState
+    let endmarker = MainPanel.endMarker $ mainPanel worldState
         (endmarkerX, endmarkerY) = (rectX $ endMarkerRect endmarker, rectY $ endMarkerRect endmarker)
     Nxt.Graphics.drawTexture endmarkerX endmarkerY (endMarkerTexture endmarker) (1.0::GLdouble)
 
     -- draw fire hydrants
-    let firehydrants = fireHydrants $ mainPanel worldState
+    let firehydrants = MainPanel.fireHydrants $ mainPanel worldState
     mapM_ drawFireHydrant firehydrants
 
     -- draw cat
-    let cat' = cat (mainPanel worldState)
+    let cat' = MainPanel.cat (mainPanel worldState)
     drawCat cat'
     --Nxt.Graphics.drawRect (catHitbox cat') (Color4 0.5 0.5 0.5 0.5)
     --Nxt.Graphics.drawPoly (catPoly cat') (Color4 0.5 0.5 0.5 0.5)
 
     -- draw rain
-    drawRain (raindrops $ mainPanel worldState)
+    drawRain (MainPanel.raindrops $ mainPanel worldState)
 
     -- draw puddles
     --sequence_ $ map (\rect -> Nxt.Graphics.drawRect rect (Color4 0.0 0.0 1.0 0.5)) (puddles $ mainPanel worldState)
@@ -97,20 +94,20 @@ drawWinFail cat = do
 -- drawItems
 drawItems :: WorldState -> IO ()
 drawItems worldState = do
-    let itemlist = (itemList (mainPanel worldState))
-        corklist = (corkList (mainPanel worldState))
-        tarplist = (tarpList (mainPanel worldState))
+    let itemlist = (MainPanel.itemList (mainPanel worldState))
+        corklist = (MainPanel.corkList (mainPanel worldState))
+        tarplist = (MainPanel.tarpList (mainPanel worldState))
 
     mapM_ drawItem itemlist
     mapM_ drawItem corklist
     mapM_ drawItem tarplist
 
-    let (cameraX, cameraY) = cameraPos (mainPanel worldState)
+    let (cameraX, cameraY) = MainPanel.cameraPos (mainPanel worldState)
     mousePos <- readIORef (mousePosRef worldState)
     Glut.Size winW winH <- Glut.get Glut.windowSize
     let (mousex, mousey) = translateMousePos mousePos winW winH
 
-    let placingItem' = placingItem $ mainPanel worldState
+    let placingItem' = MainPanel.placingItem $ mainPanel worldState
     (when (isJust placingItem') $
         drawItemAt (mousex - cameraX) (mousey - cameraY) (fromJust placingItem'))
 
@@ -123,8 +120,8 @@ drawPanels worldState = do
     -- item panel: item buttons, item constraints
     let itemList = itemButtonList (itemPanel worldState)
     mapM_ drawItemBut (init itemList)
-    mapM_ (\(ItemButton (x, y) _ _ _ count) -> Nxt.Graphics.drawString (fromIntegral (round (60.0 + x))::GLfloat)
-                                                                       (fromIntegral (round y)::GLfloat)
+    mapM_ (\(ItemButton (x, y) _ _ _ count) -> Nxt.Graphics.drawString (fromInteger (round (60.0 + x))::GLfloat)
+                                                                       (fromInteger (round y)::GLfloat)
                                                                        (show count) (Color4 0.0 0.0 0.0 1.0)) (init itemList)
 
     -- item panel: go/stop button
@@ -138,6 +135,7 @@ drawPanels worldState = do
          drawString 80.0 739.0 messagePanelStr (Color4 0.0 0.0 0.0 1.0)])
 
 -- drawDebug
+{-
 drawDebug :: WorldState -> IO ()
 drawDebug worldState = do
     -- raindrop count
@@ -149,4 +147,4 @@ drawDebug worldState = do
     let mousex = mouseX mousePos
     let mousey = mouseY mousePos
     Nxt.Graphics.drawString 10.0 740.0 ("Mouse Pos: (" ++ show mousex ++ ", " ++ show mousey ++ ")") (Color4 0.7 0.7 0.7 1.0)
-
+-}

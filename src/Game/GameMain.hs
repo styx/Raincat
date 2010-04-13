@@ -7,17 +7,15 @@ import Control.Monad.State
 import Data.IORef
 import qualified Graphics.UI.GLUT as Glut
 import World.World
-import Game.GameGraphics
 import Rain.Rain as Rain
 import Nxt.Types
 import Input.InputState as InputState
 import Panels.MainPanel
+-- import qualified Panels.MainPanel as MainPanel
 import Panels.ItemPanel
-import Panels.MessagePanel
 import Settings.WorldSettings as WorldSettings
 import Settings.DisplaySettings as DisplaySettings
 import Settings.CatSettings as CatSettings
-import Nxt.Audio
 import Data.Time.Clock
 import Cat.Cat
 import Items.Items
@@ -25,7 +23,6 @@ import Items.ItemEffects
 import Level.Level
 import Level.FireHydrant
 import Level.EndMarker
-import Control.Concurrent
 import Game.GameState
 import Nxt.Graphics
 
@@ -89,47 +86,47 @@ gameMain worldStateRef mainCallback = do
     let itemButList = itemButtonList $ itemPanel worldState
         itemButList' = execState (do
                                      -- placed an item in world
-                                     iBL <- get
+                                     iBL1 <- get
                                      put (if placedItem
                                              then map (\itemBut -> if itemName (itemButItem itemBut) == itemName item'
                                                                       then itemBut {itemButCount = itemButCount itemBut - 1}
-                                                                      else itemBut) iBL
-                                             else iBL)
+                                                                      else itemBut) iBL1
+                                             else iBL1)
 
                                      -- erased an item from world
-                                     iBL <- get
+                                     iBL2 <- get
                                      put (if not (null erasedItems)
                                              then foldr (\ersItemName -> map (\itemBut -> if itemName (itemButItem itemBut) == ersItemName
                                                                                                     then itemBut {itemButCount = itemButCount itemBut + 1}
                                                                                                     else itemBut))
-                                                        iBL erasedItems
-                                              else iBL)
+                                                        iBL2 erasedItems
+                                              else iBL2)
 
                                      -- cat used an item in world
-                                     iBL <- get
+                                     iBL3 <- get
                                      put (if not (null catUsedItems)
                                              then foldr (\usedItem -> map (\itemBut -> if itemName (itemButItem itemBut) == itemName usedItem
                                                                                                  then itemBut {itemButCount = itemButCount itemBut + 1}
                                                                                                  else itemBut))
-                                                        iBL catUsedItems
-                                             else iBL)
+                                                        iBL3 catUsedItems
+                                             else iBL3)
 
                                      return ())
                                  itemButList
 
     -- update fire hydrants
-    let fireHydrantsL = if catItemName cat' == "Wrench"
-                           then foldr (\fh fhList -> if rectIntersect (catHitbox cat') (fireHydrantRect fh)
-                                                        then case (fireHydrantDir fh) of
-                                                                  DirLeft   -> if fst (catPos cat') > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
-                                                                                  then (fh {fireHydrantDisabled = True}):fhList
-                                                                                  else fh:fhList
-                                                                  DirRight  -> if fst (catPos cat') < rectX (fireHydrantRect fh)
-                                                                                  then (fh {fireHydrantDisabled = True}):fhList
-                                                                                  else fh:fhList
-                                                        else fh:fhList)
-                                      [] (fireHydrants $ mainPanel worldState)
-                           else fireHydrants $ mainPanel worldState
+    let _ = if catItemName cat' == "Wrench"
+               then foldr (\fh fhList -> if rectIntersect (catHitbox cat') (fireHydrantRect fh)
+                                            then case (fireHydrantDir fh) of
+                                                      DirLeft   -> if fst (catPos cat') > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
+                                                                      then (fh {fireHydrantDisabled = True}):fhList
+                                                                      else fh:fhList
+                                                      DirRight  -> if fst (catPos cat') < rectX (fireHydrantRect fh)
+                                                                      then (fh {fireHydrantDisabled = True}):fhList
+                                                                      else fh:fhList
+                                            else fh:fhList)
+                          [] (fireHydrants $ mainPanel worldState)
+               else fireHydrants $ mainPanel worldState
     let fireHydrants' = updateFireHydrants goStopState' cat' worldState
 
     -- update game state (menu, post victory)
@@ -147,7 +144,7 @@ gameMain worldStateRef mainCallback = do
     messagePanel' <- updateMessagePanel worldState
 
     -- update world
-    let lvl = curLevel worldState
+    -- let lvl = curLevel worldState
     writeIORef worldStateRef (worldState {gameState = gameState', keysStateRef = keysRef', mousePosRef = mousePosRef', mainPanel = mainPanel', itemPanel = itemPanel', messagePanel = messagePanel'})
 
     Glut.postRedisplay Nothing
@@ -161,17 +158,17 @@ gameMain worldStateRef mainCallback = do
 
 -- updateFireHydrants
 updateFireHydrants :: GoStopState -> Cat -> WorldState -> [FireHydrant]
-updateFireHydrants GoState cat worldState =
+updateFireHydrants GoState _ worldState =
     let enabledFHs = map (\fh -> fh {fireHydrantDisabled = False}) (fireHydrants $ mainPanel worldState)
         in map updateFireHydrant enabledFHs
-updateFireHydrants StopState cat worldState =
-    let fireHydrantsL = if catItemName cat == "Wrench"
-                           then foldr (\fh fhList -> if rectIntersect (catHitbox cat) (fireHydrantRect fh)
+updateFireHydrants StopState theCat worldState =
+    let fireHydrantsL = if catItemName theCat == "Wrench"
+                           then foldr (\fh fhList -> if rectIntersect (catHitbox theCat) (fireHydrantRect fh)
                                                         then case (fireHydrantDir fh) of
-                                                                  DirLeft   -> if fst (catPos cat) > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
+                                                                  DirLeft   -> if fst (catPos theCat) > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
-                                                                  DirRight  -> if fst (catPos cat) < rectX (fireHydrantRect fh)
+                                                                  DirRight  -> if fst (catPos theCat) < rectX (fireHydrantRect fh)
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
                                                         else fh:fhList)
@@ -255,7 +252,7 @@ updateItemList GoState worldState keys (mousex, mousey) (camerax, cameray) itemL
 updateCatAndItems :: GoStopState -> MainPanel -> KeysState -> (Double, Double) -> (Double, Double) -> LevelData -> (Cat, [Item])
 updateCatAndItems GoState mainpanel _ _ _ lvlData =
     let c = cat mainpanel
-        catTex = catTexture c
+        -- catTex = catTexture c
         idleTex = head $ idleTextures $ catAnimations c
         walkTex = walkTextures $ catAnimations c
         catTex' = idleTex : walkTex
@@ -310,28 +307,28 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
         catVel' = execState (do
 
                                 -- gravity
-                                (velX, velY) <- get
+                                (velXg, velYg) <- get
                                 put (if catitemname /= "UpsUmbrellaActive" && catitemname /= "Hurt" && catitemname /= "Win"
-                                        then (velX, velY + gravity)
-                                        else (velX, velY))
+                                        then (velXg, velYg + gravity)
+                                        else (velXg, velYg))
 
                                 -- touching rect surface
-                                (velX, velY) <- get
+                                (velXr, velYr) <- get
                                 put (if not $ null catTouchedRects
                                         then (groundVelX, 0.0)
-                                        else (velX, velY))
+                                        else (velXr, velYr))
 
                                 -- touching poly surface
-                                (velX, velY) <- get
+                                (velXp, velYp) <- get
                                 put (if catTouchingPoly
                                         then (groundVelX, 2.0)
-                                        else (velX, velY))
+                                        else (velXp, velYp))
 
                                 -- pogostick bounce
-                                (velX, velY) <- get
+                                (velXpb, velYpb) <- get
                                 put (if catBouncePogostick
-                                        then (velX, -catVelY)
-                                        else (velX, velY))
+                                        then (velXpb, -catVelY)
+                                        else (velXpb, velYpb))
 
                                 return ())
                             (catVelocity $ cat mainpanel)
@@ -389,30 +386,30 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
         -- update cat item effects
         preEffect = execState (do
-                                  e <- get
+                                  e1 <- get
                                   put (if catBouncePogostick
                                           then pogostickEffect2
-                                          else e)
+                                          else e1)
 
-                                  e <- get
+                                  e2 <- get
                                   put (if catFallUmbrella
                                           then fallUmbrellaEffect
-                                          else e)
+                                          else e2)
 
-                                  e <- get
+                                  e3 <- get
                                   put (if catUpsUmbrella
                                           then upsUmbrellaEffect2
-                                          else e)
+                                          else e3)
 
-                                  e <- get
+                                  e4 <- get
                                   put (if catIsWet
                                          then hurtEffect
-                                         else e)
+                                         else e4)
 
-                                  e <- get
+                                  e5 <- get
                                   put (if catWin
                                           then winEffect
-                                          else e)
+                                          else e5)
 
                                   return ()) noEffect
 
@@ -424,58 +421,58 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
         -- update cat
         cat' = execState (do
                               -- apply position change
-                              c <- get
-                              put (updateCatPos c catPos')
+                              c1 <- get
+                              put (updateCatPos c1 catPos')
 
                               -- apply velocity change
-                              c <- get
-                              put (updateCatVel c catVel')
+                              c2 <- get
+                              put (updateCatVel c2 catVel')
 
                               -- apply direction change
-                              c <- get
-                              put (c {catDirection = catdirection'})
+                              c3 <- get
+                              put (c3 {catDirection = catdirection'})
 
                               -- apply item effect
-                              c <- get
-                              put (effect c)
+                              c4 <- get
+                              put (effect c4)
 
                               -- update animation
-                              c <- get
-                              put (updateCatAnim c)
+                              c5 <- get
+                              put (updateCatAnim c5)
 
                               -- revert back to walking from spring boots
-                              c <- get
-                              put (if (catItemName c == "SpringBoots") && catTouchingSurface && catVelY < 0
-                                      then walkEffect c
-                                      else c)
+                              c6 <- get
+                              put (if (catItemName c6 == "SpringBoots") && catTouchingSurface && catVelY < 0
+                                      then walkEffect c6
+                                      else c6)
 
                               -- revert back to walking from pogostick bounce
-                              c <- get
-                              put (if (catItemName c == "Pogostick") && abs catVelY <= 1.0
-                                      then walkEffect c
-                                      else c)
+                              c7 <- get
+                              put (if (catItemName c7 == "Pogostick") && abs catVelY <= 1.0
+                                      then walkEffect c7
+                                      else c7)
 
                               -- revert back to walking from falling umbrella
-                              c <- get
-                              put (if (catItemName c == "FallUmbrella") && catTouchingSurface
-                                      then walkEffect c
-                                      else c)
+                              c8 <- get
+                              put (if (catItemName c8 == "FallUmbrella") && catTouchingSurface
+                                      then walkEffect c8
+                                      else c8)
 
                               -- revert back to walking from upsidedown umbrella
-                              c <- get
-                              put (if (catItemName c == "UpsUmbrellaActive") && not catTouchingPuddle
-                                      then walkEffect c
-                                      else c)
+                              c9 <- get
+                              put (if (catItemName c9 == "UpsUmbrellaActive") && not catTouchingPuddle
+                                      then walkEffect c9
+                                      else c9)
 
                               -- update item duration
-                              c <- get
-                              put (updateCatItemDuration c)
+                              c10 <- get
+                              put (updateCatItemDuration c10)
 
                               -- teleport cat to mouse pos (DEBUG)
-                              c <- get
+                              c11 <- get
                               put (if spaceKeyDown keys
-                                      then updateCatPos c (mousex - cameraX, mousey - cameraY)
-                                      else c)
+                                      then updateCatPos c11 (mousex - cameraX, mousey - cameraY)
+                                      else c11)
 
                               return ())
                          (cat mainpanel)
@@ -484,7 +481,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
 -- catRectResponse
 catRectResponse :: Vector2d -> Vector2d -> Direction -> Nxt.Types.Rect -> Nxt.Types.Rect -> (Vector2d, Direction)
-catRectResponse (catX, catY) (catVelX, catVelY) catDir catrect@(Rect catRX catRY catRW catRH) rect@(Rect rectx recty rectwidth rectheight) =
+catRectResponse (catX, catY) (catVelX, catVelY) catDir (Rect catRX catRY catRW catRH) (Rect rectx recty rectwidth rectheight) =
     let displaceY = (recty + rectheight) - catY
         displaceDownY = (recty + rectheight) - (catRY + catRH)
         displaceX = if catVelX < 0.0
@@ -495,22 +492,21 @@ catRectResponse (catX, catY) (catVelX, catVelY) catDir catrect@(Rect catRX catRY
         oppDir = case catDir of
                     DirLeft  -> DirRight
                     DirRight -> DirLeft
-        offsetRect = overlapRect catrect rect
 
         in execState (do
                          -- vertical displacement
-                         ((x, y), d) <- get
+                         ((x1, y1), d1) <- get
                          put (if catVelY > 0.0
-                                 then ((x, y - displaceDownY), d)
+                                 then ((x1, y1 - displaceDownY), d1)
                                  else if abs displaceY < abs displaceX
-                                         then ((x, y + displaceY), d)
-                                         else ((x, y), d))
+                                         then ((x1, y1 + displaceY), d1)
+                                         else ((x1, y1), d1))
 
                          -- horizontal displacement
-                         ((x, y), d) <- get
+                         ((x2, y2), d2) <- get
                          put (if (catRY + catRH < recty + rectheight && catRY >= recty) || (catRY < recty && catVelY <= 0.0)
-                                 then ((x + displaceX, y), oppDir)
-                                 else ((x, y), d))
+                                 then ((x2 + displaceX, y2), oppDir)
+                                 else ((x2, y2), d2))
 
                          return ()) ((catX, catY), catDir)
 

@@ -8,7 +8,7 @@ module Level.FireHydrant
      updateFireHydrant,
      drawFireHydrant) where
 
-import Graphics.Rendering.OpenGL
+import Graphics.Rendering.OpenGL hiding (rect)
 import Nxt.Graphics
 import Nxt.Types
 import Settings.WorldSettings as WorldSettings
@@ -41,10 +41,10 @@ updateFireHydrant fireHydrant =
 -- drawFireHydrant
 drawFireHydrant :: FireHydrant -> IO ()
 drawFireHydrant (FireHydrant disa dir rect texList texDis) =
-    Nxt.Graphics.drawTextureFlip posX posY tex (1.0::GLdouble) flip
+    Nxt.Graphics.drawTextureFlip posX posY tex (1.0::GLdouble) fliped
     where (posX, posY) = (rectX rect, rectY rect)
           tex = if disa then texDis else head texList
-          flip = case dir of
+          fliped = case dir of
                       DirLeft -> False
                       DirRight -> True
 

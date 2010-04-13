@@ -59,8 +59,8 @@ rectIntersect (Rect r1X r1Y r1Width r1Height) (Rect r2X r2Y r2Width r2Height) =
 
 -- pointInRect
 pointInRect :: Vector2d -> Rect -> Bool
-pointInRect (x, y) (Rect rectX rectY rectWidth rectHeight) =
-    x >= rectX && x <= (rectX + rectWidth) && y >= rectY && y <= (rectY + rectHeight)
+pointInRect (x, y) (Rect rectXt rectYt width height) =
+    x >= rectXt && x <= (rectXt + width) && y >= rectYt && y <= (rectYt + height)
 
 -- overlapRect
 overlapRect :: Rect -> Rect -> Rect
@@ -111,10 +111,10 @@ polyIntersect polyA polyB =
         projRange vertices axis =
             let
                 projLengths = map (`dotProduct` axis) vertices
-                min = minimum projLengths
-                max = maximum projLengths
+                minl = minimum projLengths
+                maxl = maximum projLengths
             in
-                (min,max)
+                (minl, maxl)
 
         overlap :: (Vector2d, Vector2d) -> Bool
         overlap pairVerts =

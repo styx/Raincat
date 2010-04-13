@@ -22,7 +22,7 @@ mainCallback worldStateRef = do
 
 programMain :: IORef WorldState -> IO ()
 programMain worldStateRef = do
-    worldState <- readIORef worldStateRef
+    --worldState <- readIORef worldStateRef
     mainCallback worldStateRef
 
 programDraw :: IORef WorldState -> IO ()

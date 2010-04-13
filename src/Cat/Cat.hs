@@ -30,7 +30,6 @@ module Cat.Cat
      updateCatAnim,
      updateCatItemDuration) where
 
-import Data.Maybe
 import Graphics.Rendering.OpenGL as GL
 import Nxt.Graphics
 import Nxt.Types
@@ -100,17 +99,17 @@ initCat initPos = do
 -- drawCat
 drawCat :: Cat -> IO ()
 -- the below pattern match is for a very crude hack for the post victory laser screen :(
-drawCat (Cat (540.0, 340.0) catVel catDir catTexture _ _ _) =
-    Nxt.Graphics.drawTextureFlip 540.0 340.0 (head catTexture) (1.0::GLdouble) False
-drawCat (Cat (catPosX, catPosY) catVel catDir catTexture _ _ _) =
-    Nxt.Graphics.drawTextureFlip (catPosX - (fromIntegral (textureWidth (head catTexture)) / 2)) catPosY (head catTexture) (1.0::GLdouble) flip
-    where flip = case catDir of
+drawCat (Cat (540.0, 340.0) _ _ catTex _ _ _) =
+    Nxt.Graphics.drawTextureFlip 540.0 340.0 (head catTex) (1.0::GLdouble) False
+drawCat (Cat (catPosX, catPosY) _ catDir catTex _ _ _) =
+    Nxt.Graphics.drawTextureFlip (catPosX - (fromIntegral (textureWidth (head catTex)) / 2)) catPosY (head catTex) (1.0::GLdouble) fliped
+    where fliped = case catDir of
                     DirLeft -> True
                     DirRight -> False
 
 -- catHitbox
 catHitbox :: Cat -> Nxt.Types.Rect
-catHitbox (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
+catHitbox (Cat (catPosX, catPosY) _ catDir _ _ _ _) =
     Nxt.Types.Rect (catPosX + xOffset - (width / 2)) catPosY  width height
     where width = 50.0
           height = 80.0
@@ -120,7 +119,7 @@ catHitbox (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
 
 -- catPoly
 catPoly :: Cat -> Nxt.Types.Poly
-catPoly (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
+catPoly (Cat (catPosX, catPosY) _ catDir _ _ _ _) =
     Poly 4 [(catPosX + xOffset - (width / 2), catPosY),
             (catPosX + xOffset + (width / 2), catPosY),
             (catPosX + xOffset + (width / 2), catPosY + height),
@@ -133,7 +132,7 @@ catPoly (Cat (catPosX, catPosY) _ catDir catTexture _ _ _) =
 
 -- updateCatVel
 updateCatVel :: Cat -> Nxt.Types.Vector2d -> Cat
-updateCatVel c@(Cat (catPosX, catPosY) catVel catDir _ _ _ _) (newVelX, newVelY) =
+updateCatVel c@(Cat (catPosX, catPosY) _ catDir _ _ _ _) (newVelX, newVelY) =
     c {catPos = (catPosX + newVelX, catPosY + newVelY), catVelocity = (newVelX, newVelY),
        catDirection = newDir}
     where newDir = if newVelX < 0.0

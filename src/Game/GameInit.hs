@@ -1,21 +1,18 @@
 module Game.GameInit
     (gameInit) where
 
-import Data.Maybe
 import Data.IORef
-import World.World
+import World.World hiding (itemPanel, mainPanel, messagePanel)
 import qualified Nxt.Graphics
 import Nxt.Types
 import Input.InputState as InputState
 import Items.Items
-import Panels.MainPanel
+import Panels.MainPanel hiding (cat)
 import Panels.ItemPanel
 import Panels.MessagePanel
 import Nxt.Audio
 import Cat.Cat
 import Level.Level
-import Settings.DisplaySettings as DisplaySettings
-import Settings.WorldSettings as WorldSettings
 import Settings.CatSettings as CatSettings
 import Items.ItemEffects
 import Level.EndMarker

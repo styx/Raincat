@@ -3,11 +3,8 @@ module Game.GameInput
      gameMotion) where
 
 import Graphics.UI.GLUT
-import Control.OldException
 import System.Exit
 import Data.IORef
-import World.World
-import Nxt.Audio
 import Input.InputState as InputState
 import Settings.DisplaySettings as DisplaySettings
 
@@ -81,8 +78,8 @@ keyboardAct keysStateRef (Char '\ESC') Up = do
     writeIORef keysStateRef (keysState {escKeyDown = False})
 
 -- quit key
-keyboardAct keysStateRef (Char 'q') Down =
-    throwIO $ ExitException ExitSuccess
+keyboardAct _ (Char 'q') Down = do
+    exitWith ExitSuccess
 
 -- left mouse button
 keyboardAct keysStateRef (MouseButton LeftButton) Down = do

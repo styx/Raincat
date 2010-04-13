@@ -19,7 +19,7 @@ import Nxt.Types
 import System.IO
 import Control.Exception
 import Settings.DisplaySettings
-import Nxt.Graphics
+import Nxt.Graphics hiding (end)
 import Control.Arrow (second)
 
 data LevelData = LevelData
@@ -70,8 +70,8 @@ parseLevel inh = do
     numObjectS <- hGetLine inh
     let numObject = readInt' numObjectS
     let dummyData = LevelData (Rect 0 0 0 0) (Rect 0 0 0 0) [] [] [] [] [] []
-    levelData <- parseShape numObject inh dummyData
-    let levelDataT = transformCoord levelData
+    lvlData <- parseShape numObject inh dummyData
+    let levelDataT = transformCoord lvlData
     let level = Level (head levelDimension) (last levelDimension) itemCountsList levelDataT
 
     return level
@@ -87,7 +87,7 @@ transformCoord (LevelData end cat fireHydrantsL fireHydrantsR puddles rects poly
 
 -- parseShape
 parseShape :: Int -> Handle -> LevelData -> IO LevelData
-parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrantsR puddles rects polys _)) = do
+parseShape numShapes inh (leveldata@(LevelData _ _ fireHydrantsL fireHydrantsR puddles rects polys _)) = do
     ineof <- hIsEOF inh
     if ineof || numShapes <= 0
       then return leveldata
@@ -98,8 +98,8 @@ parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrant
             let coord = map readDouble' (tail $ words coordS)
             let verts = parseVerts coord
             let poly = Poly (length verts) verts
-            let id = head toks
-            let newLevelData = case id of
+            let obj = head toks
+            let newLevelData = case obj of
                                  "rectangle"        -> leveldata {levelRects = parseRect coord : rects}
                                  "cat"              -> leveldata {levelCat = parseRect coord}
                                  "end"              -> leveldata {levelEnd = parseRect coord}
@@ -107,6 +107,7 @@ parseShape numShapes inh (leveldata@(LevelData end cat fireHydrantsL fireHydrant
                                  "firehydrantRight" -> leveldata {levelFireHydrantsR = parseRect coord : fireHydrantsR}
                                  "puddle"           -> leveldata {levelPuddles = parseRect coord : puddles}
                                  "polygon"          -> leveldata {levelPolys = poly : polys}
+                                 _                  -> throw (PatternMatchFail "Invalid level data")
             parseShape (numShapes-1) inh newLevelData
 
 -- parseVerts

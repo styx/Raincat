@@ -3,18 +3,13 @@ module Menu.PostVictory
      postVictoryDraw) where
 
 import Data.Maybe
-import Graphics.Rendering.OpenGL as GL hiding (get)
 import Graphics.UI.GLUT hiding (get)
 import Data.IORef
 import Data.Time.Clock
 import World.World
 import Nxt.Graphics
-import Nxt.Types
 import Settings.DisplaySettings
-import Game.GameMain
 import Game.GameState
-import Input.InputState
-import Control.Monad.State
 import Panels.MainPanel
 import Cat.Cat
 
@@ -24,8 +19,8 @@ postVictoryMain worldStateRef mainCallback = do
     startTime <- getCurrentTime
 
     worldState <- readIORef worldStateRef
-    keys' <- readIORef (keysStateRef worldState)
-    mousePos <- readIORef (mousePosRef worldState)
+    -- keys' <- readIORef (keysStateRef worldState)
+    -- mousePos <- readIORef (mousePosRef worldState)
 
     let mainpanel = mainPanel worldState
 

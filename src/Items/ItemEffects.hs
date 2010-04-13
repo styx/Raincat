@@ -19,10 +19,7 @@ module Items.ItemEffects
      wrenchEffect) where
 
 import Data.Maybe
-import Graphics.Rendering.OpenGL as GL
-import Nxt.Graphics
 import Nxt.Types
-import Input.InputState
 import Cat.Cat
 import Settings.CatSettings as CatSettings
 

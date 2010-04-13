@@ -25,7 +25,6 @@ module Settings.CatSettings
      catSkateFrameTime,
      catPogoFrameTime) where
 
-import Nxt.Types
 
 -- cat hitbox width
 catHitboxWidth :: Double

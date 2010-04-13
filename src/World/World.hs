@@ -16,7 +16,7 @@ module World.World
 import qualified Graphics.UI.GLUT as Glut
 import Data.IORef
 import Input.InputState as InputState
-import Panels.MainPanel
+import Panels.MainPanel hiding (itemList)
 import Panels.ItemPanel
 import Panels.MessagePanel
 import Items.Items
@@ -111,9 +111,9 @@ loadLevel worldState levelPath = do
 
 -- loadLevelBackgrounds (NO TIME TO IMPLEMENT THIS IN FILE FORMAT PROPERLY!)
 loadLevelBackgrounds :: String -> Level -> IO [(Vector2d, Nxt.Types.Texture)]
-loadLevelBackgrounds levelPath level = do
+loadLevelBackgrounds levelPath _ = do
     dataPath <- getDataDir
-    let lvlData = levelData level
+    -- let lvlData = levelData level
 
     -- this doesn't seem to actually do anything..
     -- free previous level's textures
@@ -130,6 +130,8 @@ loadLevelBackgrounds levelPath level = do
                                                                     (-40.0, 339.0), (984.0, 339.0), (2008.0, 339.0)]
                     "/data/levels/river/river.lvl"           -> [(10.0, -315.0), (1034.0, -315.0), (2058.0, -315.0)]
                     "/data/levels/pinball/pinball.lvl"       -> [(110.0, -330.0), (1134.0, -330.0)]
+                    _                                        -> []
+
     lvlBgs <- case (drop (length dataPath) levelPath) of
                  "/data/levels/water1/water1.lvl"        -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_0_0.png"),
                                                                          Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_1_0.png")]
@@ -157,6 +159,9 @@ loadLevelBackgrounds levelPath level = do
                                                                          Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/river/river_2_0.png")]
                  "/data/levels/pinball/pinball.lvl"      -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pinball/pinball_0_0.png"),
                                                                          Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/pinball/pinball_1_0.png")]
+                 -- HACK FIX:This is warning fix and might be usefull if variable levels count can be used.
+                 -- Image unknown.png doesn't exist, so exeption will be raised.
+                 _                                       -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/unknown_level/unknown.png")]
 
     return (zip lvlPos lvlBgs)
 

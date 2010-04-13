@@ -12,13 +12,23 @@ import World.World
 import Nxt.Graphics
 import Nxt.Types
 import Settings.DisplaySettings
-import Game.GameMain
-import Game.GameGraphics
 import Game.GameState
 import Input.InputState
 import Control.Monad.State
 import Level.Level
 import Settings.Path
+
+howtoRect :: Nxt.Types.Rect
+backRect  :: Nxt.Types.Rect
+lvl1Rect  :: Nxt.Types.Rect
+lvl2Rect  :: Nxt.Types.Rect
+lvl3Rect  :: Nxt.Types.Rect
+lvl4Rect  :: Nxt.Types.Rect
+lvl5Rect  :: Nxt.Types.Rect
+lvl6Rect  :: Nxt.Types.Rect
+lvl7Rect  :: Nxt.Types.Rect
+lvl8Rect  :: Nxt.Types.Rect
+lvl9Rect  :: Nxt.Types.Rect
 
 howtoRect = Nxt.Types.Rect 690.0 470.0 200.0 60.0
 backRect  = Nxt.Types.Rect 785.0 626.0 200.0 60.0
@@ -52,90 +62,90 @@ menuMain worldStateRef mainCallback = do
 
     worldState' <- execStateT (do
                                     -- level 1
-                                    w <- get
+                                    w1 <- get
                                     lvl1 <- if pointInRect (mousex, mousey) lvl1Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/water1/water1.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w1 (dataPath ++ "/data/levels/water1/water1.lvl")
+                                                else return w1
                                     lvl1Bg <- if pointInRect (mousex, mousey) lvl1Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/water1/water1.lvl") (curLevel lvl1)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl1
                                     put (lvl1 {curLevel = (curLevel lvl1) {levelData = (levelData (curLevel lvl1)) {levelBackgrounds = lvl1Bg}}})
 
                                     -- level 2
-                                    w <- get
+                                    w2 <- get
                                     lvl2 <- if pointInRect (mousex, mousey) lvl2Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/movement1/movement1.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w2 (dataPath ++ "/data/levels/movement1/movement1.lvl")
+                                                else return w2
                                     lvl2Bg <- if pointInRect (mousex, mousey) lvl2Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/movement1/movement1.lvl") (curLevel lvl2)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl2
                                     put (lvl2 {curLevel = (curLevel lvl2) {levelData = (levelData (curLevel lvl2)) {levelBackgrounds = lvl2Bg}}})
 
                                     -- level 3
-                                    w <- get
+                                    w3 <- get
                                     lvl3 <- if pointInRect (mousex, mousey) lvl3Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/water2/water2.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w3 (dataPath ++ "/data/levels/water2/water2.lvl")
+                                                else return w3
                                     lvl3Bg <- if pointInRect (mousex, mousey) lvl3Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/water2/water2.lvl") (curLevel lvl3)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl3
                                     put (lvl3 {curLevel = (curLevel lvl3) {levelData = (levelData (curLevel lvl3)) {levelBackgrounds = lvl3Bg}}})
 
                                     -- level 4
-                                    w <- get
+                                    w4 <- get
                                     lvl4 <- if pointInRect (mousex, mousey) lvl4Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/movement2/movement2.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w4 (dataPath ++ "/data/levels/movement2/movement2.lvl")
+                                                else return w4
                                     lvl4Bg <- if pointInRect (mousex, mousey) lvl4Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/movement2/movement2.lvl") (curLevel lvl4)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl4
                                     put (lvl4 {curLevel = (curLevel lvl4) {levelData = (levelData (curLevel lvl4)) {levelBackgrounds = lvl4Bg}}})
 
                                     -- level 5
-                                    w <- get
+                                    w5 <- get
                                     lvl5 <- if pointInRect (mousex, mousey) lvl5Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/pool/pool.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w5 (dataPath ++ "/data/levels/pool/pool.lvl")
+                                                else return w5
                                     lvl5Bg <- if pointInRect (mousex, mousey) lvl5Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/pool/pool.lvl") (curLevel lvl5)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl5
                                     put (lvl5 {curLevel = (curLevel lvl5) {levelData = (levelData (curLevel lvl5)) {levelBackgrounds = lvl5Bg}}})
 
                                     -- level 6
-                                    w <- get
+                                    w6 <- get
                                     lvl6 <- if pointInRect (mousex, mousey) lvl6Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/rift/rift.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w6 (dataPath ++ "/data/levels/rift/rift.lvl")
+                                                else return w6
                                     lvl6Bg <- if pointInRect (mousex, mousey) lvl6Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/rift/rift.lvl") (curLevel lvl6)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl6
                                     put (lvl6 {curLevel = (curLevel lvl6) {levelData = (levelData (curLevel lvl6)) {levelBackgrounds = lvl6Bg}}})
 
                                     -- level 7
-                                    w <- get
+                                    w7 <- get
                                     lvl7 <- if pointInRect (mousex, mousey) lvl7Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/skyline/skyline.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w7 (dataPath ++ "/data/levels/skyline/skyline.lvl")
+                                                else return w7
                                     lvl7Bg <- if pointInRect (mousex, mousey) lvl7Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/skyline/skyline.lvl") (curLevel lvl7)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl7
                                     put (lvl7 {curLevel = (curLevel lvl7) {levelData = (levelData (curLevel lvl7)) {levelBackgrounds = lvl7Bg}}})
 
                                     -- level 8
-                                    w <- get
+                                    w8 <- get
                                     lvl8 <- if pointInRect (mousex, mousey) lvl8Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/river/river.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w8 (dataPath ++ "/data/levels/river/river.lvl")
+                                                else return w8
                                     lvl8Bg <- if pointInRect (mousex, mousey) lvl8Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/river/river.lvl") (curLevel lvl8)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl8
                                     put (lvl8 {curLevel = (curLevel lvl8) {levelData = (levelData (curLevel lvl8)) {levelBackgrounds = lvl8Bg}}})
 
                                     -- level 9
-                                    w <- get
+                                    w9 <- get
                                     lvl9 <- if pointInRect (mousex, mousey) lvl9Rect && lMouseDown keys'
-                                                then liftIO $ loadLevel w (dataPath ++ "/data/levels/pinball/pinball.lvl")
-                                                else return w
+                                                then liftIO $ loadLevel w9 (dataPath ++ "/data/levels/pinball/pinball.lvl")
+                                                else return w9
                                     lvl9Bg <- if pointInRect (mousex, mousey) lvl9Rect && lMouseDown keys'
                                                  then liftIO $ loadLevelBackgrounds  (dataPath ++ "/data/levels/pinball/pinball.lvl") (curLevel lvl9)
                                                  else return $ levelBackgrounds $ levelData $ curLevel lvl9

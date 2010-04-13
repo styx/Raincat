@@ -36,9 +36,9 @@ initGoStopButton = do
     goTex    <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/cat-go-button.png")
     stopTex  <- Nxt.Graphics.loadTexture (dataPath ++ "/data/item-buttons/cat-stop-button.png")
 
-    let rect = Nxt.Types.Rect 870.0 0.0 128.0 90.0
+    let gsrect = Nxt.Types.Rect 870.0 0.0 128.0 90.0
 
-    return (GoStopButton GoState rect 0 goTex stopTex)
+    return (GoStopButton GoState gsrect 0 goTex stopTex)
 
 -- updateGoStopButton
 updateGoStopButton :: GoStopButton -> GoStopButton
@@ -62,10 +62,10 @@ toggleGoStopButton btn = btn
 
 -- drawGoStopButton
 drawGoStopButton :: GoStopButton -> IO ()
-drawGoStopButton (GoStopButton state rect _ goTex stopTex) =
+drawGoStopButton (GoStopButton state gsrect _ goTex stopTex) =
     case state of
-         GoState    -> Nxt.Graphics.drawTexture (rectX rect) (rectY rect) goTex (1.0::GLdouble)
-         StopState  -> Nxt.Graphics.drawTexture (rectX rect) (rectY rect) stopTex (1.0::GLdouble)
+         GoState    -> Nxt.Graphics.drawTexture (rectX gsrect) (rectY gsrect) goTex (1.0::GLdouble)
+         StopState  -> Nxt.Graphics.drawTexture (rectX gsrect) (rectY gsrect) stopTex (1.0::GLdouble)
 
 data ItemPanel = ItemPanel
     {
