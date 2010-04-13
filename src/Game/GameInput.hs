@@ -78,7 +78,7 @@ keyboardAct keysStateRef (Char '\ESC') Up = do
     writeIORef keysStateRef (keysState {escKeyDown = False})
 
 -- quit key
-keyboardAct _ (Char 'q') Down = do
+keyboardAct _ (Char 'q') Down =
     exitWith ExitSuccess
 
 -- left mouse button

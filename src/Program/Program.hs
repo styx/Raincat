@@ -21,8 +21,7 @@ mainCallback worldStateRef = do
          PostVictoryState   -> postVictoryMain worldStateRef mainCallback
 
 programMain :: IORef WorldState -> IO ()
-programMain worldStateRef = do
-    --worldState <- readIORef worldStateRef
+programMain worldStateRef =
     mainCallback worldStateRef
 
 programDraw :: IORef WorldState -> IO ()
