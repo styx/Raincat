@@ -1,8 +1,6 @@
 module Panels.ItemPanel
-    (GoStopState(GoState,StopState),
-     GoStopButton(GoStopButton),
-     goStopState,
-     goStopButtonRect,
+    (GoStopState(..),
+     GoStopButton(..),
      initGoStopButton,
      updateGoStopButton,
      setGoStopButton,

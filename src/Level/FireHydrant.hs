@@ -1,9 +1,5 @@
 module Level.FireHydrant
-    (FireHydrant(FireHydrant),
-     fireHydrantDisabled,
-     fireHydrantDir,
-     fireHydrantRect,
-     fireHydrantTexture,
+    (FireHydrant(..),
      initFireHydrant,
      updateFireHydrant,
      drawFireHydrant) where

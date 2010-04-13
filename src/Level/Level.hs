@@ -113,7 +113,7 @@ parseShape numShapes inh (leveldata@(LevelData _ _ fireHydrantsL fireHydrantsR p
 -- parseVerts
 parseVerts :: [Double] -> [Vector2d]
 parseVerts [] = []
-parseVerts (x:[]) = throw (PatternMatchFail "Odd number of Coords")
+parseVerts (_x:[]) = throw (PatternMatchFail "Odd number of Coords")
 parseVerts (x:y:vs) = (x,y):parseVerts vs
 
 -- parseRect
