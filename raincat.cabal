@@ -58,4 +58,36 @@ executable              raincat
                         SDL-image,
                         SDL-mixer
 
-    -- TODO other-modules:
+    other-modules:
+                        Cat.Cat
+                        Error.Error
+                        Game.GameGraphics
+                        Game.GameInit
+                        Game.GameInput
+                        Game.GameMain
+                        Game.GameState
+                        Input.InputState
+                        Items.ItemEffects
+                        Items.Items
+                        Level.EndMarker
+                        Level.FireHydrant
+                        Level.Level
+                        Menu.Menu
+                        Menu.PostVictory
+                        Nxt.Audio
+                        Nxt.Graphics
+                        Nxt.Input
+                        Nxt.Types
+                        Panels.ItemPanel
+                        Panels.MainPanel
+                        Panels.MessagePanel
+                        Program.Program
+                        Rain.Rain
+                        Settings.CatSettings
+                        Settings.DisplaySettings
+                        Settings.Path
+                        Settings.RainSettings
+                        Settings.UISettings
+                        Settings.WorldSettings
+                        UI.ItemPanel
+                        World.World
