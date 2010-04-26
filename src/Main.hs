@@ -1,5 +1,4 @@
-module Main
-    () where
+module Main (main) where
 
 import Graphics.UI.GLUT
 import System.Exit
