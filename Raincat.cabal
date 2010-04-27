@@ -18,7 +18,8 @@ description:            Project Raincat is a game developed by Carnegie Mellon s
 
 category:               Game
 author:                 Garrick Chin, Susan Lin, SooHyun Jang, Anthony Maurice, William Wang,
-                        Andrew Zheng, Rachel Berkowitz, Spencer Ying, Tal Stramer, Mikhail Pobolovets
+                        Andrew Zheng, Rachel Berkowitz, Spencer Ying, Tal Stramer, Mikhail Pobolovets,
+                        Sergei Trofimovich
 
 stability:              stable
 tested-with:            GHC==6.12.1
