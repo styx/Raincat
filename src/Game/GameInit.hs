@@ -28,7 +28,7 @@ gameInit = do
     mousePos <- newIORef (InputState.MousePos 0 0)
 
     initAudio
-    m <- loadMusic (dataPath ++ "/data/music/project_raincat.mp3")
+    m <- loadMusic (dataPath ++ "/data/music/project_raincat.ogg")
     playMusic m
 
     lvl <- openLevel (dataPath ++ "/data/levels/pinball/pinball.lvl")

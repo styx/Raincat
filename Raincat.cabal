@@ -1,5 +1,5 @@
 name:                   Raincat
-version:                1.1.1.1
+version:                1.1.1.2
 cabal-version:          >= 1.8
 build-type:             Simple
 license:                BSD3
@@ -25,7 +25,7 @@ stability:              stable
 tested-with:            GHC==6.12.1
 data-files:             LICENSE README
                         data/effects/*.png data/cat/cat-walk/*.png data/cat/cat-idle/*.png
-                        data/music/*.mp3 data/levels/skyline/*.lvl data/levels/movement1/*.lvl
+                        data/music/*.ogg data/levels/skyline/*.lvl data/levels/movement1/*.lvl
                         data/cat/cat-springboots/*.png data/levels/movement2/*.lvl data/levels/pinball/*.lvl
                         data/item-buttons/*.png data/backgrounds/*.png data/levels/rift/*.png
                         data/levels/water1/*.png data/levels/river/*.lvl data/cat/cat-skateboard/*.png
