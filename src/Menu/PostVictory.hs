@@ -31,7 +31,7 @@ postVictoryMain worldStateRef mainCallback = do
                       else c
         cat' = updateCatItemDuration $ updateCatAnim catLaser
 
-    let gameState' = if catPos cat' == (540.0, 340.0) && isJust (catItemDuration cat') && fromJust (catItemDuration cat') == 1
+    let gameState' = if catPos cat' == (540.0, 340.0) && (catItemDuration cat' == Just 1)
                         then MainMenuState
                         else PostVictoryState
 

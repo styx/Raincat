@@ -28,4 +28,4 @@ main = do
 
     mainLoop
 
-    exitWith ExitSuccess
+    exitSuccess

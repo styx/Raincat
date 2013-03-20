@@ -119,7 +119,7 @@ loadLevelBackgrounds levelPath _ = do
     -- free previous level's textures
     -- mapM_ (\(_, oldBg) -> freeTexture oldBg) (levelBackgrounds lvlData)
 
-    let lvlPos = case (drop (length dataPath) levelPath) of
+    let lvlPos = case drop (length dataPath) levelPath of
                     "/data/levels/water1/water1.lvl"         -> [(0.0, 0.0), (1024.0, 0.0)]
                     "/data/levels/movement1/movement1.lvl"   -> [(-15.0, -265.0), (1009.0, -265.0), (2033, -265.0)]
                     "/data/levels/water2/water2.lvl"         -> [(0.0, -200.0), (1024.0, -200.0)]
@@ -132,7 +132,7 @@ loadLevelBackgrounds levelPath _ = do
                     "/data/levels/pinball/pinball.lvl"       -> [(110.0, -330.0), (1134.0, -330.0)]
                     _                                        -> []
 
-    lvlBgs <- case (drop (length dataPath) levelPath) of
+    lvlBgs <- case drop (length dataPath) levelPath of
                  "/data/levels/water1/water1.lvl"        -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_0_0.png"),
                                                                          Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/water1/water1_1_0.png")]
                  "/data/levels/movement1/movement1.lvl"  -> sequence [Nxt.Graphics.loadTexture (dataPath ++ "/data/levels/movement1/movement1_0_0.png"),
