@@ -79,7 +79,7 @@ keyboardAct keysStateRef (Char '\ESC') Up = do
 
 -- quit key
 keyboardAct _ (Char 'q') Down =
-    exitWith ExitSuccess
+    exitSuccess
 
 -- left mouse button
 keyboardAct keysStateRef (MouseButton LeftButton) Down = do

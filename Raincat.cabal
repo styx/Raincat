@@ -22,7 +22,7 @@ author:                 Garrick Chin, Susan Lin, SooHyun Jang, Anthony Maurice, 
                         Sergei Trofimovich
 
 stability:              stable
-tested-with:            GHC==6.12.1
+tested-with:            GHC==7.6.2
 data-files:             LICENSE README
                         data/effects/*.png data/cat/cat-walk/*.png data/cat/cat-idle/*.png
                         data/music/*.ogg data/levels/skyline/*.lvl data/levels/movement1/*.lvl
@@ -48,7 +48,9 @@ executable              raincat
     hs-source-dirs:     src
     build-depends:
                         base >= 3 && < 5,
+                        base-unicode-symbols,
                         containers,
+                        containers-unicode-symbols,
                         extensible-exceptions,
                         mtl,
                         random,
@@ -58,7 +60,7 @@ executable              raincat
                         SDL,
                         SDL-image,
                         SDL-mixer
-
+    extensions:         UnicodeSyntax
     other-modules:
                         Cat.Cat
                         Error.Error
