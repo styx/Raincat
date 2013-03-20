@@ -13,7 +13,7 @@ runhaskell Setup.lhs --user configure
 runhaskell Setup.lhs build
 runhaskell Setup.lhs install
 
-cabal install Raincat
+Alternative method: cabal install Raincat
 
 CHANGELOG:
 ----------
@@ -48,34 +48,6 @@ when trying to run Raincat, this is because your SDL-mixer library
 was not compiled with mp3 support. You will need to recompile that
 with mp3 support or otherwise obtain a copy with mp3 support in order
 to run the game.
-
-
-
-Hlint errors:
-    Error: Reduce duplication (2)
-    Error: Redundant if (2)
-    Error: Use Foldable.forM_ (1)
-    Error: Use Just (3)
-    Error: Use exitSuccess (2)
-    Error: Use notElem (1)
-    Warning: Reduce duplication (2)
-    Warning: Redundant bracket (15)
-    Warning: Use guards (6)
-
-Affecting files
-
-    ./src/Cat/Cat.hs (2)
-    ./src/Game/GameGraphics.hs (6)
-    ./src/Game/GameInput.hs (1)
-    ./src/Game/GameMain.hs (13)
-    ./src/Input/InputState.hs (2)
-    ./src/Items/ItemEffects.hs (3)
-    ./src/Main.hs (1)
-    ./src/Menu/Menu.hs (2)
-    ./src/Menu/PostVictory.hs (1)
-    ./src/World/World.hs (3)
-
-
 
 
 PROJECT TEAM:
