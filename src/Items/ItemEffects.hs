@@ -60,7 +60,7 @@ springBootsEffect cat =
 -- Hair Dryer
 hairDryerEffect :: Cat -> Cat
 hairDryerEffect cat =
-    let (velX, velY) = (catVelocity cat)
+    let (velX, velY) = catVelocity cat
     in updateCatVel cat (-velX, velY)
 
 -- Speed Boots
@@ -69,7 +69,7 @@ speedBootsEffect cat =
     let speedBootsTex = speedBootsTextures $ catAnimations cat
         vel = (case catDirection cat of
                   DirRight -> CatSettings.catSpeedVelX
-                  DirLeft -> (-CatSettings.catSpeedVelX),
+                  DirLeft -> -CatSettings.catSpeedVelX,
                snd $ catVelocity cat)
     in updateCatVel (cat {catTexture = speedBootsTex, catItemName = "SpeedBoots",
                           catItemDuration = Just CatSettings.catSpeedDuration}) vel
@@ -130,8 +130,9 @@ skateboardEffect cat =
     let skateboardTex = skateboardTextures $ catAnimations cat
         vel = (case catDirection cat of
                     DirRight -> CatSettings.catSkateVelX
-                    DirLeft -> (-CatSettings.catSkateVelX),
-               snd (catVelocity cat))
+--                    DirLeft -> (-CatSettings.catSkateVelX),
+--               snd (catVelocity cat))
+                    DirLeft -> -CatSettings.catSkateVelX,snd (catVelocity cat))
     in updateCatVel (cat {catTexture = skateboardTex, catItemName = "Skateboard",
                           catItemDuration = Just CatSettings.catSkateDuration}) vel
 

@@ -369,8 +369,9 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
         catWetFromFireHydrant = isJust catTouchedFireHydrant &&
                                     let fh = fromJust catTouchedFireHydrant
-                                            in (not (fireHydrantDisabled fh || catitemname == "Shield") &&
-                                                  (case fireHydrantDir fh of
+                                            in if fireHydrantDisabled fh || catitemname == "Shield"
+                                                  then False
+                                                  else case fireHydrantDir fh of
                                                             DirLeft   -> if catitemname == "Poncho"
                                                                             then case catdirection of
                                                                                      DirLeft   -> False
@@ -380,7 +381,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                                                                             then case catdirection of
                                                                                       DirRight  -> False
                                                                                       _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh)
-                                                                            else rectX catrect + rectWidth catrect > rectX (fireHydrantRect fh) + 100))
+                                                                            else rectX catrect + rectWidth catrect > rectX (fireHydrantRect fh) + 100
 
         catIsWet = catWetFromPuddle || catWetFromRain || catWetFromFireHydrant
 
