@@ -48,24 +48,29 @@ gameMain worldStateRef mainCallback = do
 
     -- update camera pos
     let (cameraX, cameraY) = cameraPos $ mainPanel worldState
-        cameraX' = if leftKeyDown keys' && cameraX < 0.0
-                      then cameraX + WorldSettings.cameraSpeed
-                      else
-                        if rightKeyDown keys' && cameraX > -(fromIntegral $ levelWidth lvl :: Double) + fromGLdouble screenResWidth
-                           then cameraX - WorldSettings.cameraSpeed
-                           else cameraX
-        cameraY' = if upKeyDown keys' && cameraY > 0.0
-                      then cameraY - WorldSettings.cameraSpeed
-                      else
-                        if downKeyDown keys' && cameraY < (fromIntegral $ levelHeight lvl :: Double) - fromGLdouble screenResHeight
-                           then cameraY + WorldSettings.cameraSpeed
-                           else cameraY
-
+        cameraX' 
+          | leftKeyDown keys' && cameraX < 0.0 =
+            cameraX + WorldSettings.cameraSpeed
+          | rightKeyDown keys' &&
+             cameraX >
+               (-(fromIntegral $ levelWidth lvl :: Double)) +
+                 fromGLdouble screenResWidth
+                  = cameraX - WorldSettings.cameraSpeed
+          | otherwise = cameraX
+        cameraY' 
+           | upKeyDown keys' && cameraY > 0.0 =
+             cameraY - WorldSettings.cameraSpeed
+           | downKeyDown keys' &&
+               cameraY <
+                 (fromIntegral $ levelHeight lvl :: Double) -
+                   fromGLdouble screenResHeight
+             = cameraY + WorldSettings.cameraSpeed
+           | otherwise = cameraY
     -- update rain
     rain' <- updateRain worldState
 
     -- update go/stop state
-    let goStopState' = if catItemName c == "Hurt" && isJust (catItemDuration c) && fromJust (catItemDuration c) == 1
+    let goStopState' = if catItemName c == "Hurt" && (catItemDuration c == Just 1)
                           then GoState
                           else goStopState $ goStopButton $ itemPanel worldState
                        where c = cat mainpanel
@@ -117,7 +122,7 @@ gameMain worldStateRef mainCallback = do
     -- update fire hydrants
     let _ = if catItemName cat' == "Wrench"
                then foldr (\fh fhList -> if rectIntersect (catHitbox cat') (fireHydrantRect fh)
-                                            then case (fireHydrantDir fh) of
+                                            then case fireHydrantDir fh of
                                                       DirLeft   -> if fst (catPos cat') > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
                                                                       then (fh {fireHydrantDisabled = True}):fhList
                                                                       else fh:fhList
@@ -130,11 +135,11 @@ gameMain worldStateRef mainCallback = do
     let fireHydrants' = updateFireHydrants goStopState' cat' worldState
 
     -- update game state (menu, post victory)
-    let gameState' = if escKeyDown keys'
-                        then MainMenuState
-                        else if catItemName cat' == "Win" && isJust (catItemDuration cat') && fromJust (catItemDuration cat') == 1
-                                then PostVictoryState
-                                else GameRunningState
+    let gameState' 
+          | escKeyDown keys' = MainMenuState
+          | catItemName cat' == "Win" && (catItemDuration cat' == Just 1) =
+            PostVictoryState
+          | otherwise = GameRunningState
 
     -- update panels
     let mainPanel' = mainpanel {cameraPos = (cameraX', cameraY'), raindrops = rain', cat = cat', curItem = item',
@@ -164,7 +169,7 @@ updateFireHydrants GoState _ worldState =
 updateFireHydrants StopState theCat worldState =
     let fireHydrantsL = if catItemName theCat == "Wrench"
                            then foldr (\fh fhList -> if rectIntersect (catHitbox theCat) (fireHydrantRect fh)
-                                                        then case (fireHydrantDir fh) of
+                                                        then case fireHydrantDir fh of
                                                                   DirLeft   -> if fst (catPos theCat) > (rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh))
                                                                                   then (fh {fireHydrantDisabled = True}):fhList
                                                                                   else fh:fhList
@@ -229,17 +234,16 @@ updateItemList GoState worldState keys (mousex, mousey) (camerax, cameray) itemL
                                                                   else countValid) True itemButList
 
     let placeItem = forceItemEval && lMousePrevDown keys && not (lMouseDown keys) && not curItemIntersects && mousex < maxWorldX && itemName item' /= "Eraser" && itemCountValid && isJust (placingItem mainpanel)
-    let placingItem' = if placeItem || not (lMouseDown keys)
-                          then Nothing
-                          else if lMouseDown keys && itemName item' /= "Eraser" && itemCountValid
-                                  then if isJust (placingItem mainpanel)
-                                          then placingItem mainpanel
-                                          else Just item'
-                                  else Nothing
+    let placingItem' 
+          | placeItem || not (lMouseDown keys) = Nothing
+          | lMouseDown keys && itemName item' /= "Eraser" && itemCountValid =
+            if isJust (placingItem mainpanel) then placingItem mainpanel else
+              Just item'
+          | otherwise = Nothing
 
     -- placing new item in world
     let (itemList', corkList', tarpList') = if placeItem
-                                               then case (itemName item') of
+                                               then case itemName item' of
                                                          "Cork"    -> (itemListE, item':corkListE, tarpListE)
                                                          "Tarp"    -> (itemListE, corkListE, item':tarpListE)
                                                          "Eraser"  -> (itemListE, corkListE, tarpListE)
@@ -308,7 +312,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
                                 -- gravity
                                 (velXg, velYg) <- get
-                                put (if catitemname /= "UpsUmbrellaActive" && catitemname /= "Hurt" && catitemname /= "Win"
+                                put (if catitemname `notElem` ["UpsUmbrellaActive", "Hurt", "Win"]
                                         then (velXg, velYg + gravity)
                                         else (velXg, velYg))
 
@@ -365,9 +369,8 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
 
         catWetFromFireHydrant = isJust catTouchedFireHydrant &&
                                     let fh = fromJust catTouchedFireHydrant
-                                            in if fireHydrantDisabled fh || catitemname == "Shield"
-                                                  then False
-                                                  else case fireHydrantDir fh of
+                                            in (not (fireHydrantDisabled fh || catitemname == "Shield") &&
+                                                  (case fireHydrantDir fh of
                                                             DirLeft   -> if catitemname == "Poncho"
                                                                             then case catdirection of
                                                                                      DirLeft   -> False
@@ -377,7 +380,7 @@ updateCatAndItems StopState mainpanel keys (cameraX, cameraY) (mousex, mousey) _
                                                                             then case catdirection of
                                                                                       DirRight  -> False
                                                                                       _         -> rectX catrect + rectWidth catrect < rectX (fireHydrantRect fh) + rectWidth (fireHydrantRect fh)
-                                                                            else rectX catrect + rectWidth catrect > rectX (fireHydrantRect fh) + 100
+                                                                            else rectX catrect + rectWidth catrect > rectX (fireHydrantRect fh) + 100))
 
         catIsWet = catWetFromPuddle || catWetFromRain || catWetFromFireHydrant
 
@@ -484,11 +487,10 @@ catRectResponse :: Vector2d -> Vector2d -> Direction -> Nxt.Types.Rect -> Nxt.Ty
 catRectResponse (catX, catY) (catVelX, catVelY) catDir (Rect catRX catRY catRW catRH) (Rect rectx recty rectwidth rectheight) =
     let displaceY = (recty + rectheight) - catY
         displaceDownY = (recty + rectheight) - (catRY + catRH)
-        displaceX = if catVelX < 0.0
-                       then (rectx + rectwidth) - catRX
-                       else if catVelX > 0.0
-                               then rectx - (catRX + catRW)
-                               else 0.0
+        displaceX
+          | catVelX < 0.0 = (rectx + rectwidth) - catRX
+          | catVelX > 0.0 = rectx - (catRX + catRW)
+          | otherwise = 0.0
         oppDir = case catDir of
                     DirLeft  -> DirRight
                     DirRight -> DirLeft

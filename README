@@ -7,6 +7,13 @@ HOW TO START THE GAME:
 ----------------------
 ./raincat
 
+COMPILATION:
+----------------------
+runhaskell Setup.lhs --user configure
+runhaskell Setup.lhs build
+runhaskell Setup.lhs install
+
+Alternative method: cabal install Raincat
 
 CHANGELOG:
 ----------
@@ -60,3 +67,4 @@ OTHER CONTRIBUTORS:
 -------------------
 Mikhail Pobolovets  - Programmer
 Sergei Trofimovich  - Programmer
+Raahul Kumar 	    - Programmer

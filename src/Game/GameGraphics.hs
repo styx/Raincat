@@ -2,6 +2,7 @@ module Game.GameGraphics
     (gameDraw) where
 
 import Data.Maybe
+import Data.Foldable (forM_)
 import Graphics.UI.GLUT as Glut
 import Data.IORef
 import World.World
@@ -94,9 +95,9 @@ drawWinFail cat = do
 -- drawItems
 drawItems :: WorldState -> IO ()
 drawItems worldState = do
-    let itemlist = (MainPanel.itemList (mainPanel worldState))
-        corklist = (MainPanel.corkList (mainPanel worldState))
-        tarplist = (MainPanel.tarpList (mainPanel worldState))
+    let itemlist = MainPanel.itemList (mainPanel worldState)
+        corklist = MainPanel.corkList (mainPanel worldState)
+        tarplist = MainPanel.tarpList (mainPanel worldState)
 
     mapM_ drawItem itemlist
     mapM_ drawItem corklist
@@ -108,8 +109,8 @@ drawItems worldState = do
     let (mousex, mousey) = translateMousePos mousePos winW winH
 
     let placingItem' = MainPanel.placingItem $ mainPanel worldState
-    (when (isJust placingItem') $
-        drawItemAt (mousex - cameraX) (mousey - cameraY) (fromJust placingItem'))
+    forM_ placingItem'
+        (drawItemAt (mousex - cameraX) (mousey - cameraY))
 
 -- drawPanels
 drawPanels :: WorldState -> IO ()
@@ -129,10 +130,10 @@ drawPanels worldState = do
 
     -- message panel: message
     let messagePanelStr = messageDisplay (messagePanel worldState)
-    (when (messagePanelStr /= "") $
+    when (messagePanelStr /= "") $
       sequence_
         [drawRect UISettings.messagePanelRect UISettings.messagePanelColor,
-         drawString 80.0 739.0 messagePanelStr (Color4 0.0 0.0 0.0 1.0)])
+         drawString 80.0 739.0 messagePanelStr (Color4 0.0 0.0 0.0 1.0)]
 
 -- drawDebug
 {-
