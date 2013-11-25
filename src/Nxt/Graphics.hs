@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module Nxt.Graphics
     (begin,
      end,
@@ -88,7 +89,13 @@ loadTexture textureFilePath = do
     surfacePixels <- surfaceGetPixels surface
 
     let pixelData = PixelData RGBA UnsignedByte surfacePixels
-    texImage2D Nothing NoProxy 0 RGBA' surfaceSize 0 pixelData
+    texImage2D
+#if MIN_VERSION_OpenGL(2,9,0)
+          Texture2D
+#else
+          Nothing
+#endif
+          NoProxy 0 RGBA' surfaceSize 0 pixelData
 
     freeSurface surface
 
