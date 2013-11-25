@@ -48,9 +48,7 @@ executable              raincat
     hs-source-dirs:     src
     build-depends:
                         base >= 3 && < 5,
-                        base-unicode-symbols,
                         containers,
-                        containers-unicode-symbols,
                         extensible-exceptions,
                         mtl,
                         random,
@@ -60,7 +58,6 @@ executable              raincat
                         SDL,
                         SDL-image,
                         SDL-mixer
-    extensions:         UnicodeSyntax
     other-modules:
                         Cat.Cat
                         Error.Error
