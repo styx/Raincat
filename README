@@ -17,6 +17,9 @@ Alternative method: cabal install Raincat
 
 CHANGELOG:
 ----------
+Version 1.2:
+    - Ported to SDL2
+    - Added support for Stack
 Version 1.1:
     - Changed initial item placement from click to select, click to place
       to drag n' drop.
@@ -35,9 +38,9 @@ win32 build runs under wine.
 Runtimes for the following libraries are assumed to be installed:
 GLUT
 OpenGL
-SDL
-SDL_image
-SDL_mixer
+SDL2
+SDL2_image
+SDL2_mixer
 
 
 TROUBLESHOOTING:
@@ -68,3 +71,4 @@ OTHER CONTRIBUTORS:
 Mikhail Pobolovets  - Programmer
 Sergei Trofimovich  - Programmer
 Raahul Kumar 	    - Programmer
+Alvaro F. García    - Programmer
