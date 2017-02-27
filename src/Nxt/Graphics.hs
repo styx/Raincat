@@ -21,9 +21,9 @@ module Nxt.Graphics
 import Control.Monad
 import Graphics.UI.GLUT as GLUT hiding (windowSize, windowTitle)
 import Graphics.Rendering.OpenGL as GL
-import Graphics.UI.SDL.Image as SDLImage
-import Graphics.UI.SDL.Types
-import Graphics.UI.SDL.Video
+import qualified SDL.Image as SDLImage hiding (loadTexture)
+import qualified SDL.Vect
+import qualified SDL.Video
 import Nxt.Types hiding (rectX, rectY, rectWidth, rectHeight)
 import Unsafe.Coerce
 
@@ -75,10 +75,11 @@ fromGLdouble = unsafeCoerce
 -- loadTexture (only specified to load PNGs)
 loadTexture :: String -> IO Nxt.Types.Texture
 loadTexture textureFilePath = do
-    surface <- SDLImage.loadTyped textureFilePath SDLImage.PNG
+    surface <- SDLImage.load textureFilePath
 
-    let width = fromIntegral (surfaceGetWidth surface)
-    let height = fromIntegral (surfaceGetHeight surface)
+    SDL.Vect.V2 rawWidth rawHeight <- SDL.Video.surfaceDimensions surface
+    let width = fromIntegral rawWidth
+    let height = fromIntegral rawHeight
     let surfaceSize = TextureSize2D width height
 
     textureObj <- liftM head (genObjectNames 1)
@@ -86,7 +87,7 @@ loadTexture textureFilePath = do
     textureWrapMode Texture2D S $= (Repeated, Repeat)
     textureWrapMode Texture2D T $= (Repeated, Repeat)
     textureFilter Texture2D $= ((Nearest, Nothing), Nearest)
-    surfacePixels <- surfaceGetPixels surface
+    surfacePixels <- SDL.Video.surfacePixels surface
 
     let pixelData = PixelData RGBA UnsignedByte surfacePixels
     texImage2D
@@ -97,7 +98,7 @@ loadTexture textureFilePath = do
 #endif
           NoProxy 0 RGBA' surfaceSize 0 pixelData
 
-    freeSurface surface
+    SDL.Video.freeSurface surface
 
     return (Nxt.Types.Texture width height textureObj)
 
