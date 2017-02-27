@@ -135,10 +135,10 @@ updateCatVel :: Cat -> Nxt.Types.Vector2d -> Cat
 updateCatVel c@(Cat (catPosX, catPosY) _ catDir _ _ _ _) (newVelX, newVelY) =
     c {catPos = (catPosX + newVelX, catPosY + newVelY), catVelocity = (newVelX, newVelY),
        catDirection = newDir}
-    where newDir 
-		| newVelX < 0.0 = DirLeft
-  		| newVelX > 0.0 = DirRight
-  		| otherwise = catDir
+    where newDir
+                | newVelX < 0.0 = DirLeft
+                | newVelX > 0.0 = DirRight
+                | otherwise = catDir
 
 -- updateCatPos
 updateCatPos :: Cat -> Nxt.Types.Vector2d -> Cat
