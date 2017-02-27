@@ -55,9 +55,9 @@ executable              raincat
                         time,
                         GLUT,
                         OpenGL,
-                        SDL,
-                        SDL-image,
-                        SDL-mixer
+                        sdl2,
+                        sdl2-image,
+                        sdl2-mixer
     other-modules:
                         Cat.Cat
                         Error.Error
