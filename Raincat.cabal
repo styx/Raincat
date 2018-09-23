@@ -81,6 +81,7 @@ executable              raincat
                         Panels.ItemPanel
                         Panels.MainPanel
                         Panels.MessagePanel
+                        Paths_Raincat
                         Program.Program
                         Rain.Rain
                         Settings.CatSettings
