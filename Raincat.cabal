@@ -1,5 +1,5 @@
 name:                   Raincat
-version:                1.2
+version:                1.2.1
 cabal-version:          >= 1.8
 build-type:             Simple
 license:                BSD3
