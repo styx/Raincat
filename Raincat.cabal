@@ -76,7 +76,6 @@ executable              raincat
                         Menu.PostVictory
                         Nxt.Audio
                         Nxt.Graphics
-                        Nxt.Input
                         Nxt.Types
                         Panels.ItemPanel
                         Panels.MainPanel
@@ -90,5 +89,4 @@ executable              raincat
                         Settings.RainSettings
                         Settings.UISettings
                         Settings.WorldSettings
-                        UI.ItemPanel
                         World.World
