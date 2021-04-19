@@ -1,0 +1,89 @@
+name: raincat-game
+version: 1.2.1
+grade: stable
+summary: A puzzle game with a cat in lead role.
+description: "Raincat is a 2d puzzle game similar to the Incredible Machine and Lemmings series. Your goal is simple: guide the cat safe and dry to the end of each level. Just mind the rain, puddles, and loose fire hydrants in your path!"
+icon: snap/gui/raincat-game.png
+confinement: strict
+base: core20
+
+architectures:
+- build-on: amd64
+- build-on: arm64
+- build-on: armhf
+
+apps:
+  raincat:
+    extensions: [gnome-3-38]
+    command: usr/bin/raincat
+    plugs:
+      - alsa
+      - audio-playback
+      - pulseaudio
+
+parts:
+  raincat:
+    plugin: dump
+    source: https://github.com/styx/Raincat.git
+    source-type: git
+    source-commit: 49b688c73335c9a4090708bc75f6af9575a65670
+    #
+    # The mkdir -p /root/.cabal/bin line in override-build solves the
+    # following error when using --prefix:
+    #   https://github.com/haskell/cabal/issues/5240#issuecomment-615196339
+    #
+    # The last find command is for debugging, so we can see
+    # the location and contents of our build directory in the
+    # Snapcraft log after building.
+    #
+    # The arguments passed to v1-install here are pretty critical to
+    # make sure that the compiled Haskell binary is actually looking
+    # in the right places for its data files when it is installed.
+    #
+    # We will "install" it in our final-build Snap by using the organize
+    # stanza to copy all of the relevant files to the right place.
+    override-build: |
+      cabal v1-update
+      mkdir -p /root/.cabal/bin
+      cabal v1-install --prefix /usr --bindir /usr/bin --datadir /usr/share --datasubdir raincat
+      find .
+    #
+    # Copy Cabal build output to the right place
+    # in the final-build Snap using organize.
+    #
+    # Please note the layout: stanza below where we
+    # make sure that the "/usr/share/raincat" directory
+    # is pointing to the right place so that it's there
+    # when the Raincat app looks for it.
+    organize:
+      $SNAPCRAFT_PART_BUILD/dist/build/raincat/raincat: usr/bin/raincat
+      $SNAPCRAFT_PART_BUILD/data/: usr/share/raincat/data/
+    build-packages:
+      - cabal-install
+      - ghc
+      - libffi-dev
+      - libghc-extensible-exceptions-dev
+      - libghc-glut-dev
+      - libghc-mtl-dev
+      - libghc-opengl-dev
+      - libghc-random-dev
+      - libghc-sdl2-dev
+      - libgl1-mesa-dev
+      - libglu1-mesa-dev
+      - libsdl2-dev
+      - libsdl2-image-dev
+      - libsdl2-mixer-dev
+    stage-packages:
+      - freeglut3
+      - libffi7
+      - libgl1-mesa-glx
+      - libglu1-mesa
+      - libgmp10
+      - libsdl2-2.0-0
+      - libsdl2-image-2.0-0
+      - libsdl2-mixer-2.0-0
+      - libslang2
+
+layout:
+  /usr/share/raincat/data:
+    symlink: $SNAP/usr/share/raincat/data

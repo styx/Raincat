@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Raincat
+GenericName=Logic Game
+GenericName[es]=Juego de lógica
+GenericName[de]=Denkspiel
+Comment=2D puzzle game featuring a fuzzy little cat
+Comment[es]=Rompecabezas en 2D protagonizado por un lindo gatito
+Comment[de]=Puzzlespiel in 2D mit einer kleinen, flauschigen Katze
+Icon=${SNAP}/meta/gui/raincat-game.png
+Exec=raincat-game.raincat
+Terminal=false
+Categories=Game;KidsGame;
+Keywords=cat;lemmings;puzzle;kids;
