@@ -11,7 +11,7 @@ It can be installed with:
 sudo snap install raincat-game
 ```
 
-After installation, Raincat can be launched from the .desktop launcher, or with:
+After installation, Raincat can be launched from the `raincat-game.desktop` launcher, or with:
 ```
 snap run raincat-game.raincat
 ```
