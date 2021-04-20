@@ -3,17 +3,20 @@ Game Creation Society - Fall 08
 
 https://www.gamecreation.org/
 
+### Screenshot
+![Raincat screenshot](screenshot.png?raw=true "Raincat screenshot")
+
 ### Installation (Snap Store)
 Raincat is available in the Snap Store at: https://snapcraft.io/raincat-game
 
 It can be installed with:
 ```
-sudo snap install raincat-game
+sudo snap install raincat
 ```
 
-After installation, Raincat can be launched from the `raincat-game.desktop` launcher, or with:
+After installation, Raincat can be launched from the Raincat desktop launcher, or with:
 ```
-snap run raincat-game.raincat
+snap run raincat
 ```
 
 ### Compilation

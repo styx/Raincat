@@ -1,9 +1,9 @@
-name: raincat-game
+name: raincat
 version: 1.2.1
 grade: stable
 summary: A puzzle game with a cat in lead role.
 description: "Raincat is a 2d puzzle game similar to the Incredible Machine and Lemmings series. Your goal is simple: guide the cat safe and dry to the end of each level. Just mind the rain, puddles, and loose fire hydrants in your path!"
-icon: snap/gui/raincat-game.png
+icon: snap/gui/raincat.png
 confinement: strict
 base: core20
 
