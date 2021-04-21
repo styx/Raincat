@@ -7,7 +7,7 @@ https://www.gamecreation.org/
 ![Raincat screenshot](screenshot.png?raw=true "Raincat screenshot")
 
 ### Installation (Snap Store)
-Raincat is available in the Snap Store at: https://snapcraft.io/raincat
+Raincat is available in the Snap Store at: [![raincat](https://snapcraft.io/raincat/badge.svg)](https://snapcraft.io/raincat)
 
 It can be installed with:
 ```
