@@ -91,4 +91,5 @@ Mikhail Pobolovets  - Programmer
 Sergei Trofimovich  - Programmer
 Raahul Kumar        - Programmer
 Alvaro F. García    - Programmer
+Alex Haydock        - Packaging (Snapcraft)
 ```
