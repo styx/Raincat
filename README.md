@@ -7,7 +7,7 @@ https://www.gamecreation.org/
 ![Raincat screenshot](screenshot.png?raw=true "Raincat screenshot")
 
 ### Installation (Snap Store)
-Raincat is available in the Snap Store at: https://snapcraft.io/raincat-game
+Raincat is available in the Snap Store at: https://snapcraft.io/raincat
 
 It can be installed with:
 ```
@@ -91,4 +91,5 @@ Mikhail Pobolovets  - Programmer
 Sergei Trofimovich  - Programmer
 Raahul Kumar        - Programmer
 Alvaro F. García    - Programmer
+Alex Haydock        - Packaging (Snapcraft)
 ```
