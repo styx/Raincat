@@ -1,9 +1,8 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-module Error.Error (RaincatError(..), throwEx, catchEx, showError) where
+module Error.Error (RaincatError(..), showError) where
 
 import Data.Typeable
-import Control.Exception.Extensible as EE
-import Control.Monad.Error
+import Control.Exception as E
 
 data RaincatError
     = BadLevelData String
@@ -11,14 +10,7 @@ data RaincatError
     | BadRectData
     deriving (Typeable, Show)
 
-instance Error RaincatError where
 instance Exception RaincatError where
-
-throwEx :: RaincatError -> a
-throwEx = EE.throw
-
-catchEx :: IO a -> (RaincatError -> IO a) -> IO a
-catchEx = EE.catch
 
 showError :: RaincatError -> String
 showError err = case err of

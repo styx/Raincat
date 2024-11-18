@@ -47,9 +47,8 @@ executable              raincat
     ghc-options:        -Wall
     hs-source-dirs:     src
     build-depends:
-                        base >= 3 && < 5,
+                        base >= 4 && < 5,
                         containers,
-                        extensible-exceptions,
                         mtl,
                         random,
                         time,

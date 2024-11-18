@@ -17,6 +17,7 @@ module Level.Level
 
 import Nxt.Types
 import System.IO
+import qualified Control.Exception as CE
 import qualified Error.Error as E
 import Settings.DisplaySettings
 import Nxt.Graphics hiding (end)
@@ -107,20 +108,20 @@ parseShape numShapes inh (leveldata@(LevelData _ _ fireHydrantsL fireHydrantsR p
                                  "firehydrantRight" -> leveldata {levelFireHydrantsR = parseRect coord : fireHydrantsR}
                                  "puddle"           -> leveldata {levelPuddles = parseRect coord : puddles}
                                  "polygon"          -> leveldata {levelPolys = poly : polys}
-                                 _                  -> E.throwEx (E.BadLevelData obj)
+                                 _                  -> CE.throw (E.BadLevelData obj)
             parseShape (numShapes-1) inh newLevelData
 
 -- parseVerts
 parseVerts :: [Double] -> [Vector2d]
 parseVerts [] = []
-parseVerts (_x:[]) = E.throwEx E.BadVerticesData
+parseVerts (_x:[]) = CE.throw E.BadVerticesData
 parseVerts (x:y:vs) = (x,y):parseVerts vs
 
 -- parseRect
 parseRect :: [Double] -> Rect
 parseRect coords =
     if length coords /= 8
-    then E.throwEx E.BadRectData
+    then CE.throw E.BadRectData
     else Rect bottomLX bottomLY width height
         where bottomLX = head coords
               bottomLY = coords !! 1
