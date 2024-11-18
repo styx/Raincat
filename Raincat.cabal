@@ -1,8 +1,8 @@
+cabal-version:          3.0
 name:                   Raincat
 version:                1.2.1
-cabal-version:          >= 1.8
 build-type:             Simple
-license:                BSD3
+license:                BSD-3-Clause
 license-file:           LICENSE
 copyright:              Garrick Chin 2008-2010
 maintainer:             Mikhail S. Pobolovets <styx.mp@gmail.com>
@@ -22,7 +22,7 @@ author:                 Garrick Chin, Susan Lin, SooHyun Jang, Anthony Maurice, 
                         Sergei Trofimovich
 
 stability:              stable
-tested-with:            GHC==7.6.2
+tested-with:            GHC == { 8.10.7, 9.6.3 }
 data-files:             LICENSE README.md
                         data/effects/*.png data/cat/cat-walk/*.png data/cat/cat-idle/*.png
                         data/music/*.ogg data/levels/skyline/*.lvl data/levels/movement1/*.lvl
@@ -38,10 +38,10 @@ data-files:             LICENSE README.md
                         data/cat/cat-upside-down-umbrella/*.png data/cat/cat-shield/*.png
                         data/levels/river/*.png data/levels/pool/*.lvl data/items/*.png
 
-data-dir:               ""
 extra-source-files:     Setup.lhs
 
 executable              raincat
+    default-language:   Haskell2010
     main-is:            Main.hs
     buildable:          True
     ghc-options:        -Wall
