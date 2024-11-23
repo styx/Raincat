@@ -2,7 +2,6 @@ module Menu.PostVictory
     (postVictoryMain,
      postVictoryDraw) where
 
-import Data.Maybe
 import Graphics.UI.GLUT hiding (get)
 import Data.IORef
 import Data.Time.Clock
