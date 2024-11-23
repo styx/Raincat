@@ -61,6 +61,7 @@ executable              raincat
                         sdl2,
                         sdl2-image,
                         sdl2-mixer
+    autogen-modules:    Paths_Raincat
     other-modules:
                         Cat.Cat
                         Error.Error
