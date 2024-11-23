@@ -1,7 +1,6 @@
 module Game.GameGraphics
     (gameDraw) where
 
-import Data.Maybe
 import Data.Foldable (forM_)
 import Graphics.UI.GLUT as Glut
 import Data.IORef
