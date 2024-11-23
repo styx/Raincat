@@ -51,16 +51,20 @@ executable              raincat
     ghc-options:        -Wall
     hs-source-dirs:     src
     build-depends:
-                        base >= 4 && < 5,
-                        containers,
-                        mtl,
-                        random,
-                        time,
-                        GLUT,
-                        OpenGL,
-                        sdl2,
-                        sdl2-image,
-                        sdl2-mixer
+                        -- Specifying ghc-8.10 dependencies as a lower
+                        -- bound. Chances are high that older and newer
+                        -- dependencies will Just Work.
+                        base ^>= 4.14 || ^>= 4.15 || ^>= 4.16 || ^>= 4.17 || ^>= 4.18 || ^>= 4.19,
+                        containers ^>= 0.6,
+                        mtl ^>= 2.2 || ^>= 2.3,
+                        random ^>= 1.2,
+                        time ^>= 1.9 || ^>= 1.10 || ^>= 1.11 || ^>= 1.12,
+                        -- non-ghc packages:
+                        GLUT ^>= 2.7,
+                        OpenGL ^>= 3.0,
+                        sdl2 ^>= 2.5,
+                        sdl2-image ^>= 2.1,
+                        sdl2-mixer ^>= 1.2
     autogen-modules:    Paths_Raincat
     other-modules:
                         Cat.Cat
